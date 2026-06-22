@@ -1,2 +1,3 @@
 Set WshShell = CreateObject("WScript.Shell")
-WshShell.Run "python """ & WScript.ScriptFullName & """\..\screenshot_cleaner.py""", 0, False
+script = Left(WScript.ScriptFullName, InStrRev(WScript.ScriptFullName, "\")) & "tray_agent.py"
+WshShell.Run "pythonw """ & script & """", 0, False
