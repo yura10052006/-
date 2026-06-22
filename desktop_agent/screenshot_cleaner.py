@@ -97,7 +97,7 @@ def run():
         log(f"Created folder: {SCREENSHOT_FOLDER}")
 
     observer = Observer()
-    observer.schedule(ScreenshotHandler(), str(SCREENSHOT_FOLDER), recursive=False)
+    observer.schedule(ScreenshotHandler(), str(SCREENSHOT_FOLDER), recursive=True)
     observer.start()
     log(f"Watching: {SCREENSHOT_FOLDER}")
     log("Agent running. Press Ctrl+C to stop.")
