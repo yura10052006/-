@@ -1,0 +1,14 @@
+/* ===== DNKA' — лавандовий градієнт, світла тема ===== */
+:root {
+  --brand-primary:    #9B7EBD;
+  --brand-secondary:  #C9B8E0;
+  --brand-accent:     #7B5EA7;
+  --brand-bg:         #F3EEFF;
+  --brand-hero-bg:    linear-gradient(135deg, #EAD9FF 0%, #CEB5F0 60%, #B89CE0 100%);
+  --brand-hero-text:  #2D1F4E;
+  --brand-btn-bg:     #9B7EBD;
+  --brand-btn-text:   #FFFFFF;
+  --brand-tab-active: #9B7EBD;
+  --brand-tab-text:   #FFFFFF;
+  --brand-filter-bg:  #EAD9FF;
+}

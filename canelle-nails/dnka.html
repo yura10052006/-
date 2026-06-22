@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNKA' — Canelle Nails Львів</title>
+  <meta name="description" content="Офіційний дилер DNKA' у Львові. Гель-лаки, бази, топи за найкращими цінами.">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dnka.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="dnka.html" class="logo">Canelle <em>Nails</em></a>
+
+      <nav>
+        <ul class="brand-nav">
+          <li><a href="dnka.html"   class="active">DNKA'</a></li>
+          <li><a href="valeri.html">Valéri</a></li>
+          <li><a href="stef.html">STEF</a></li>
+          <li><a href="roks.html">ROKS</a></li>
+          <li><a href="youposh.html">YouPosh</a></li>
+        </ul>
+      </nav>
+
+      <button class="cart-btn" aria-label="Кошик">
+        🛒 Кошик <span class="cart-count">0</span>
+      </button>
+
+      <button class="burger" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Мобільне меню -->
+  <nav class="mobile-nav" aria-hidden="true">
+    <a href="dnka.html"   class="active">DNKA'</a>
+    <a href="valeri.html">Valéri</a>
+    <a href="stef.html">STEF</a>
+    <a href="roks.html">ROKS</a>
+    <a href="youposh.html">YouPosh</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="hero-tag">Офіційний дилер · Львів</span>
+      <h1>DNKA' Gel Polish</h1>
+      <p>Понад 200 відтінків. Стійкий та яскравий результат, що підкорює своєю легкістю нанесення.</p>
+    </div>
+  </section>
+
+  <!-- ===== ТОВАРИ ===== -->
+  <main class="products-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2 class="section-title">Каталог DNKA'</h2>
+      </div>
+      <div class="filters"></div>
+      <div class="product-grid"></div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="dnka.html" class="footer-logo">Canelle <em>Nails</em></a>
+        <p class="footer-desc">Офіційний дилер 5 брендів гель-лаків у Львові. Швидка доставка, оригінальна продукція.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Бренди</h3>
+        <a href="dnka.html">DNKA'</a>
+        <a href="valeri.html">Valéri</a>
+        <a href="stef.html">STEF</a>
+        <a href="roks.html">ROKS</a>
+        <a href="youposh.html">YouPosh</a>
+      </div>
+      <div class="footer-col">
+        <h3>Контакти</h3>
+        <p>📍 Львів, Україна</p>
+        <a href="https://instagram.com/canelle.nails" target="_blank" rel="noopener">📷 Instagram</a>
+        <p>📞 +38 (0XX) XXX-XX-XX</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Canelle Nails. Всі права захищені.
+    </div>
+  </footer>
+
+  <!-- ===== КОШИК ===== -->
+  <div class="cart-overlay"></div>
+  <aside class="cart-sidebar" aria-label="Кошик">
+    <div class="cart-header">
+      <h2>Ваш кошик</h2>
+      <button class="cart-close" aria-label="Закрити">×</button>
+    </div>
+    <div class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Разом:</span>
+        <span class="cart-total-price">0 грн</span>
+      </div>
+      <form class="order-form" novalidate>
+        <input type="text"  name="name"  placeholder="Ваше ім'я *" required>
+        <input type="tel"   name="phone" placeholder="Телефон * (+380...)" required>
+        <button type="submit" class="submit-btn" disabled>Залишити заявку</button>
+        <p class="order-note">Менеджер зв'яжеться з вами для підтвердження та оплати</p>
+      </form>
+    </div>
+  </aside>
+
+  <script src="js/cart.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+  <script>initProducts('dnka');</script>
+</body>
+</html>

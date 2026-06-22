@@ -1,0 +1,23 @@
+/* ===== STEF — бордово-золота, темний hero, преміум ===== */
+:root {
+  --brand-primary:    #9B2335;
+  --brand-secondary:  #C8973A;
+  --brand-accent:     #C8973A;
+  --brand-bg:         #FDF5F0;
+  --brand-hero-bg:    linear-gradient(135deg, #2A0A0E 0%, #5C1520 55%, #8B2232 100%);
+  --brand-hero-text:  #FFFFFF;
+  --brand-btn-bg:     #C8973A;
+  --brand-btn-text:   #FFFFFF;
+  --brand-tab-active: #9B2335;
+  --brand-tab-text:   #FFFFFF;
+  --brand-filter-bg:  #FCEAE0;
+}
+
+/* Hero-тег адаптується під темний фон */
+.hero-tag {
+  background: rgba(200, 151, 58, 0.2);
+  border-color: rgba(200, 151, 58, 0.45);
+  color: #F5CC7A;
+}
+.hero h1 { color: #FFFFFF; }
+.hero p   { color: rgba(255,255,255,0.8); }

@@ -1,0 +1,14 @@
+/* ===== Valéri — бежево-золота, теплий мінімалізм ===== */
+:root {
+  --brand-primary:    #C8A96E;
+  --brand-secondary:  #E8D5A8;
+  --brand-accent:     #A67C3D;
+  --brand-bg:         #FBF6EE;
+  --brand-hero-bg:    linear-gradient(135deg, #FDF0D8 0%, #F5E0B4 60%, #EDD090 100%);
+  --brand-hero-text:  #3D2800;
+  --brand-btn-bg:     #C8A96E;
+  --brand-btn-text:   #FFFFFF;
+  --brand-tab-active: #C8A96E;
+  --brand-tab-text:   #FFFFFF;
+  --brand-filter-bg:  #FDF0D8;
+}

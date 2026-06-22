@@ -1,0 +1,22 @@
+/* ===== YouPosh — чорно-білий мінімалізм з рожевим акцентом, темний hero ===== */
+:root {
+  --brand-primary:    #E91E8C;
+  --brand-secondary:  #F48FB1;
+  --brand-accent:     #C2185B;
+  --brand-bg:         #FFF0F6;
+  --brand-hero-bg:    linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 60%, #2D0A18 100%);
+  --brand-hero-text:  #FFFFFF;
+  --brand-btn-bg:     #E91E8C;
+  --brand-btn-text:   #FFFFFF;
+  --brand-tab-active: #1A1A1A;
+  --brand-tab-text:   #FFFFFF;
+  --brand-filter-bg:  #FFE0F0;
+}
+
+.hero-tag {
+  background: rgba(233, 30, 140, 0.2);
+  border-color: rgba(233, 30, 140, 0.45);
+  color: #F48FB1;
+}
+.hero h1 { color: #FFFFFF; }
+.hero p   { color: rgba(255,255,255,0.75); }

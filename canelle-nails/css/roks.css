@@ -1,0 +1,14 @@
+/* ===== ROKS — червоно-жовта, яскрава ===== */
+:root {
+  --brand-primary:    #E53935;
+  --brand-secondary:  #FFC107;
+  --brand-accent:     #E53935;
+  --brand-bg:         #FFF5F5;
+  --brand-hero-bg:    linear-gradient(135deg, #FFE082 0%, #FF8A65 50%, #EF5350 100%);
+  --brand-hero-text:  #3E0000;
+  --brand-btn-bg:     #E53935;
+  --brand-btn-text:   #FFFFFF;
+  --brand-tab-active: #E53935;
+  --brand-tab-text:   #FFFFFF;
+  --brand-filter-bg:  #FFE5E5;
+}
