@@ -15,7 +15,7 @@ from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-SCREENSHOT_FOLDER = Path(r"D:\Screenshots\Screenshots")
+SCREENSHOT_FOLDER = Path("D:/Screenshots/Screenshots")
 
 SCREENSHOT_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp"}
 
