@@ -1,0 +1,18 @@
+{
+  "desktop_path": "",
+  "mess_threshold": 10,
+  "sort_files": true,
+  "remove_duplicates": true,
+  "rename_files": true,
+  "log_enabled": true,
+  "categories": {
+    "Зображення": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".webp", ".ico", ".tiff", ".raw"],
+    "Документи": [".pdf", ".doc", ".docx", ".txt", ".xls", ".xlsx", ".ppt", ".pptx", ".odt", ".rtf", ".csv"],
+    "Відео": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm", ".m4v"],
+    "Музика": [".mp3", ".wav", ".flac", ".aac", ".ogg", ".wma", ".m4a"],
+    "Архіви": [".zip", ".rar", ".7z", ".tar", ".gz", ".bz2"],
+    "Код": [".py", ".js", ".ts", ".html", ".css", ".java", ".cpp", ".c", ".cs", ".php", ".json", ".xml", ".yaml", ".yml"],
+    "Програми": [".exe", ".msi", ".bat", ".cmd", ".ps1"],
+    "Інше": []
+  }
+}
