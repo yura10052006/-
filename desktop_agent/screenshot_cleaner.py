@@ -1,7 +1,9 @@
 """
 Background Agent:
-1. Screenshot Cleaner - press Ctrl+Shift+D after sending to delete last screenshot
-2. ZIP Cleaner - if a ZIP is extracted (folder with same name appears) -> delete the ZIP
+1. Screenshot Cleaner:
+   - Detects Ctrl+V paste into Telegram -> auto-deletes last screenshot
+   - Fallback hotkey Ctrl+Shift+D to manually delete last screenshot
+2. ZIP Cleaner - extracted archive -> auto-delete the zip
 """
 
 import time
@@ -14,15 +16,24 @@ from watchdog.events import FileSystemEventHandler
 
 try:
     import keyboard
-    HOTKEY_AVAILABLE = True
+    KEYBOARD_AVAILABLE = True
 except ImportError:
-    HOTKEY_AVAILABLE = False
+    KEYBOARD_AVAILABLE = False
+
+try:
+    import win32gui
+    import win32process
+    import win32clipboard
+    WIN32_AVAILABLE = True
+except ImportError:
+    WIN32_AVAILABLE = False
 
 try:
     from plyer import notification as plyer_notification
     NOTIFY_AVAILABLE = True
 except ImportError:
     NOTIFY_AVAILABLE = False
+
 
 SCREENSHOT_FOLDER = Path("D:/Screenshots/Screenshots")
 
@@ -35,10 +46,9 @@ ZIP_WATCH_FOLDERS = [
 ARCHIVE_EXTENSIONS = {".zip", ".rar", ".7z", ".tar", ".gz"}
 SCREENSHOT_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp"}
 
-DELETE_HOTKEY = "ctrl+shift+d"
 MAX_SCREENSHOT_AGE_SECONDS = 600  # 10 minutes
 
-last_screenshot = None
+last_screenshot: Path | None = None
 
 
 def log(message):
@@ -52,42 +62,108 @@ def notify(title, message):
             title=title,
             message=message,
             app_name="Desktop Agent",
-            timeout=8,
+            timeout=6,
         )
 
 
-# ── Screenshot cleaner ────────────────────────────────────────────────────────
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def get_active_process_name():
+    """Return the .exe name of the currently focused window."""
+    if not WIN32_AVAILABLE:
+        return ""
+    try:
+        hwnd = win32gui.GetForegroundWindow()
+        _, pid = win32process.GetWindowThreadProcessId(hwnd)
+        for proc in psutil.process_iter(["pid", "name"]):
+            if proc.pid == pid:
+                return proc.name().lower()
+    except Exception:
+        pass
+    return ""
+
+
+def clipboard_has_image():
+    """Return True if the clipboard currently holds an image."""
+    if not WIN32_AVAILABLE:
+        return False
+    try:
+        win32clipboard.OpenClipboard()
+        has = (
+            win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_DIB)
+            or win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_BITMAP)
+            or win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_DIBV5)
+        )
+        win32clipboard.CloseClipboard()
+        return has
+    except Exception:
+        try:
+            win32clipboard.CloseClipboard()
+        except Exception:
+            pass
+        return False
+
 
 def get_latest_screenshot():
-    """Find the most recently created screenshot file."""
-    screenshots = list(SCREENSHOT_FOLDER.rglob("*"))
-    screenshots = [f for f in screenshots if f.is_file() and f.suffix.lower() in SCREENSHOT_EXTENSIONS]
-    if not screenshots:
-        return None
-    return max(screenshots, key=lambda f: f.stat().st_ctime)
+    files = [
+        f for f in SCREENSHOT_FOLDER.rglob("*")
+        if f.is_file() and f.suffix.lower() in SCREENSHOT_EXTENSIONS
+    ]
+    return max(files, key=lambda f: f.stat().st_ctime) if files else None
 
 
-def delete_sent_screenshot():
-    """Called on hotkey press - delete the most recent screenshot if < 10 min old."""
-    global last_screenshot
+def delete_screenshot(target: Path, reason: str):
+    try:
+        if target.exists():
+            target.unlink()
+            log(f"DELETED ({reason}): {target.name}")
+            notify("Screenshot deleted!", target.name)
+    except OSError as e:
+        log(f"ERROR deleting {target.name}: {e}")
+
+
+# ── Auto-detect Ctrl+V paste into Telegram ───────────────────────────────────
+
+def on_paste():
+    """Called every time Ctrl+V is pressed (globally)."""
+    active = get_active_process_name()
+    if active != "telegram.exe":
+        return
+
+    if not clipboard_has_image():
+        return
 
     target = last_screenshot or get_latest_screenshot()
+    if not target or not target.exists():
+        return
 
-    if target and target.exists():
-        age = time.time() - target.stat().st_ctime
-        if age <= MAX_SCREENSHOT_AGE_SECONDS:
-            try:
-                target.unlink()
-                log(f"DELETED (hotkey): {target.name}")
-                notify("Screenshot deleted!", target.name)
-                last_screenshot = None
-            except OSError as e:
-                log(f"ERROR deleting {target.name}: {e}")
-        else:
-            log("No recent screenshot to delete (too old)")
+    age = time.time() - target.stat().st_ctime
+    if age > MAX_SCREENSHOT_AGE_SECONDS:
+        return
+
+    # Small delay so Telegram receives the paste before we delete the file
+    def delayed_delete():
+        time.sleep(1.5)
+        delete_screenshot(target, "pasted in Telegram")
+
+    threading.Thread(target=delayed_delete, daemon=True).start()
+
+
+# ── Manual hotkey fallback ────────────────────────────────────────────────────
+
+def on_manual_hotkey():
+    target = last_screenshot or get_latest_screenshot()
+    if not target or not target.exists():
+        log("No recent screenshot to delete")
+        return
+    age = time.time() - target.stat().st_ctime
+    if age <= MAX_SCREENSHOT_AGE_SECONDS:
+        delete_screenshot(target, "manual hotkey")
     else:
-        log("No screenshot found to delete")
+        log("Screenshot is too old to delete")
 
+
+# ── Screenshot watcher ────────────────────────────────────────────────────────
 
 class ScreenshotHandler(FileSystemEventHandler):
     def on_created(self, event):
@@ -98,10 +174,6 @@ class ScreenshotHandler(FileSystemEventHandler):
         if filepath.suffix.lower() in SCREENSHOT_EXTENSIONS:
             last_screenshot = filepath
             log(f"New screenshot: {filepath.name}")
-            notify(
-                "Screenshot saved!",
-                f"After sending - press Ctrl+Shift+D to delete it."
-            )
 
 
 # ── ZIP cleaner ───────────────────────────────────────────────────────────────
@@ -141,10 +213,10 @@ def run():
     if not SCREENSHOT_FOLDER.exists():
         SCREENSHOT_FOLDER.mkdir(parents=True, exist_ok=True)
 
-    obs_screenshot = Observer()
-    obs_screenshot.schedule(ScreenshotHandler(), str(SCREENSHOT_FOLDER), recursive=True)
-    obs_screenshot.start()
-    observers.append(obs_screenshot)
+    obs = Observer()
+    obs.schedule(ScreenshotHandler(), str(SCREENSHOT_FOLDER), recursive=True)
+    obs.start()
+    observers.append(obs)
     log(f"Screenshots watching: {SCREENSHOT_FOLDER}")
 
     for folder in ZIP_WATCH_FOLDERS:
@@ -155,11 +227,14 @@ def run():
             observers.append(obs_zip)
             log(f"ZIP watching: {folder}")
 
-    if HOTKEY_AVAILABLE:
-        keyboard.add_hotkey(DELETE_HOTKEY, delete_sent_screenshot)
-        log(f"Hotkey ready: {DELETE_HOTKEY.upper()} = delete last screenshot")
+    if KEYBOARD_AVAILABLE:
+        if WIN32_AVAILABLE:
+            keyboard.add_hotkey("ctrl+v", on_paste, suppress=False)
+            log("Auto-detect: Ctrl+V paste in Telegram -> screenshot deleted")
+        keyboard.add_hotkey("ctrl+shift+d", on_manual_hotkey)
+        log("Fallback hotkey: Ctrl+Shift+D -> delete last screenshot manually")
     else:
-        log("WARNING: 'keyboard' library not installed, hotkey disabled")
+        log("WARNING: 'keyboard' library not installed")
 
     log("Agent running. Press Ctrl+C to stop.")
 
