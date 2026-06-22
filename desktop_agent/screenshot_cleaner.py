@@ -68,19 +68,20 @@ def notify(title, message):
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def get_active_process_name():
-    """Return the .exe name of the currently focused window."""
+def get_active_window_info():
+    """Return (process_name, window_title) of the currently focused window."""
     if not WIN32_AVAILABLE:
-        return ""
+        return "", ""
     try:
         hwnd = win32gui.GetForegroundWindow()
+        title = win32gui.GetWindowText(hwnd).lower()
         _, pid = win32process.GetWindowThreadProcessId(hwnd)
         for proc in psutil.process_iter(["pid", "name"]):
             if proc.pid == pid:
-                return proc.name().lower()
+                return proc.name().lower(), title
     except Exception:
         pass
-    return ""
+    return "", ""
 
 
 def clipboard_has_image():
@@ -124,10 +125,17 @@ def delete_screenshot(target: Path, reason: str):
 
 # ── Auto-detect Ctrl+V paste into Telegram ───────────────────────────────────
 
+BROWSER_PROCESSES = {"chrome.exe", "msedge.exe", "firefox.exe", "opera.exe", "brave.exe", "chromium.exe"}
+
+
+def is_target_app(process: str) -> bool:
+    return process == "telegram.exe" or process in BROWSER_PROCESSES
+
+
 def on_paste():
     """Called every time Ctrl+V is pressed (globally)."""
-    active = get_active_process_name()
-    if active != "telegram.exe":
+    active, _ = get_active_window_info()
+    if not is_target_app(active):
         return
 
     if not clipboard_has_image():
@@ -230,7 +238,7 @@ def run():
     if KEYBOARD_AVAILABLE:
         if WIN32_AVAILABLE:
             keyboard.add_hotkey("ctrl+v", on_paste, suppress=False)
-            log("Auto-detect: Ctrl+V paste in Telegram -> screenshot deleted")
+            log("Auto-detect: Ctrl+V in Telegram / Chrome / Claude -> screenshot deleted")
         keyboard.add_hotkey("ctrl+shift+d", on_manual_hotkey)
         log("Fallback hotkey: Ctrl+Shift+D -> delete last screenshot manually")
     else:
