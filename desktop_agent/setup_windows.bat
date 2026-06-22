@@ -1,70 +1,54 @@
 @echo off
-chcp 65001 >nul
 echo ============================================
-echo   Desktop Agent - Встановлення (Windows)
+echo   Desktop Agent - Setup (Windows)
 echo ============================================
 echo.
 
-:: Check Python
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [ПОМИЛКА] Python не знайдено. Завантажте з https://python.org
+    echo [ERROR] Python not found. Download from https://python.org
     pause
     exit /b 1
 )
 
-echo [OK] Python знайдено
+echo [OK] Python found
 echo.
 
-:: Install dependencies
-echo Встановлення залежностей...
-pip install -r "%~dp0requirements.txt" --quiet
+echo Installing dependencies...
+pip install plyer --quiet
 if %errorlevel% neq 0 (
-    echo [ПОМИЛКА] Не вдалося встановити залежності
+    echo [ERROR] Failed to install dependencies
     pause
     exit /b 1
 )
-echo [OK] Залежності встановлено
+echo [OK] Dependencies installed
 echo.
 
-:: Set up Windows Task Scheduler
-echo Налаштування розкладу (щодня о 09:00)...
+echo Setting up Task Scheduler (daily at 09:00)...
 
 set TASK_NAME=DesktopAgent
 set SCRIPT_PATH=%~dp0desktop_agent.py
 
-:: Delete old task if exists
 schtasks /delete /tn "%TASK_NAME%" /f >nul 2>&1
 
-:: Create new task - runs daily at 09:00
-schtasks /create ^
-    /tn "%TASK_NAME%" ^
-    /tr "python \"%SCRIPT_PATH%\"" ^
-    /sc DAILY ^
-    /st 09:00 ^
-    /rl HIGHEST ^
-    /f
+schtasks /create /tn "%TASK_NAME%" /tr "python \"%SCRIPT_PATH%\"" /sc DAILY /st 09:00 /rl HIGHEST /f
 
 if %errorlevel% neq 0 (
-    echo [ПОМИЛКА] Не вдалося створити задачу в планувальнику
-    echo Спробуйте запустити цей файл від імені Адміністратора
+    echo [ERROR] Failed to create scheduled task.
+    echo Please run this file as Administrator.
     pause
     exit /b 1
 )
 
-echo [OK] Задача "%TASK_NAME%" створена - запуск щодня о 09:00
+echo [OK] Task "%TASK_NAME%" created - runs daily at 09:00
 echo.
 echo ============================================
-echo   Встановлення завершено успішно!
+echo   Setup complete!
 echo ============================================
 echo.
-echo Що далі:
-echo  - Агент запускатиметься автоматично щодня о 09:00
-echo  - Налаштування: %~dp0config.json
-echo  - Лог-файл: %USERPROFILE%\Desktop_Agent_Log.txt
-echo  - Ручний запуск: python "%SCRIPT_PATH%"
-echo.
-echo Щоб змінити час запуску - відкрийте "Планувальник завдань" Windows
-echo і відредагуйте задачу "%TASK_NAME%"
+echo - Agent runs automatically every day at 09:00
+echo - Config file: %~dp0config.json
+echo - Log file: %USERPROFILE%\Desktop_Agent_Log.txt
+echo - Manual run: python "%SCRIPT_PATH%"
 echo.
 pause
