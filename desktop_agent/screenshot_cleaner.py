@@ -1,6 +1,6 @@
 """
 Background Agent:
-1. Screenshot Cleaner - if screenshot is sent via Telegram/browser within 60s -> delete it
+1. Screenshot Cleaner - press Ctrl+Shift+D after sending to delete last screenshot
 2. ZIP Cleaner - if a ZIP is extracted (folder with same name appears) -> delete the ZIP
 """
 
@@ -12,6 +12,18 @@ from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+try:
+    import keyboard
+    HOTKEY_AVAILABLE = True
+except ImportError:
+    HOTKEY_AVAILABLE = False
+
+try:
+    from plyer import notification as plyer_notification
+    NOTIFY_AVAILABLE = True
+except ImportError:
+    NOTIFY_AVAILABLE = False
+
 SCREENSHOT_FOLDER = Path("D:/Screenshots/Screenshots")
 
 ZIP_WATCH_FOLDERS = [
@@ -21,20 +33,12 @@ ZIP_WATCH_FOLDERS = [
 ]
 
 ARCHIVE_EXTENSIONS = {".zip", ".rar", ".7z", ".tar", ".gz"}
-
 SCREENSHOT_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp"}
 
-SENDING_APPS = {
-    "telegram.exe",
-    "chrome.exe",
-    "firefox.exe",
-    "msedge.exe",
-    "opera.exe",
-    "brave.exe",
-    "chromium.exe",
-}
+DELETE_HOTKEY = "ctrl+shift+d"
+MAX_SCREENSHOT_AGE_SECONDS = 600  # 10 minutes
 
-MONITOR_SECONDS = 60
+last_screenshot = None
 
 
 def log(message):
@@ -42,66 +46,72 @@ def log(message):
     print(f"[{timestamp}] {message}", flush=True)
 
 
+def notify(title, message):
+    if NOTIFY_AVAILABLE:
+        plyer_notification.notify(
+            title=title,
+            message=message,
+            app_name="Desktop Agent",
+            timeout=8,
+        )
+
+
 # ── Screenshot cleaner ────────────────────────────────────────────────────────
 
-def is_file_opened_by_sender(filepath):
-    target = str(filepath).lower()
-    for proc in psutil.process_iter(["name", "open_files"]):
-        try:
-            if proc.info["name"].lower() not in SENDING_APPS:
-                continue
-            for f in proc.info["open_files"] or []:
-                if f.path.lower() == target:
-                    return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-    return False
+def get_latest_screenshot():
+    """Find the most recently created screenshot file."""
+    screenshots = list(SCREENSHOT_FOLDER.rglob("*"))
+    screenshots = [f for f in screenshots if f.is_file() and f.suffix.lower() in SCREENSHOT_EXTENSIONS]
+    if not screenshots:
+        return None
+    return max(screenshots, key=lambda f: f.stat().st_ctime)
 
 
-def monitor_screenshot(filepath):
-    filepath = Path(filepath)
-    deadline = time.time() + MONITOR_SECONDS
+def delete_sent_screenshot():
+    """Called on hotkey press - delete the most recent screenshot if < 10 min old."""
+    global last_screenshot
 
-    while time.time() < deadline:
-        if not filepath.exists():
-            return
-        if is_file_opened_by_sender(filepath):
-            time.sleep(3)
+    target = last_screenshot or get_latest_screenshot()
+
+    if target and target.exists():
+        age = time.time() - target.stat().st_ctime
+        if age <= MAX_SCREENSHOT_AGE_SECONDS:
             try:
-                if filepath.exists():
-                    filepath.unlink()
-                    log(f"SCREENSHOT DELETED (sent): {filepath.name}")
+                target.unlink()
+                log(f"DELETED (hotkey): {target.name}")
+                notify("Screenshot deleted!", target.name)
+                last_screenshot = None
             except OSError as e:
-                log(f"ERROR deleting screenshot {filepath.name}: {e}")
-            return
-        time.sleep(1)
-
-    log(f"SCREENSHOT KEPT (not sent): {filepath.name}")
+                log(f"ERROR deleting {target.name}: {e}")
+        else:
+            log("No recent screenshot to delete (too old)")
+    else:
+        log("No screenshot found to delete")
 
 
 class ScreenshotHandler(FileSystemEventHandler):
     def on_created(self, event):
+        global last_screenshot
         if event.is_directory:
             return
         filepath = Path(event.src_path)
         if filepath.suffix.lower() in SCREENSHOT_EXTENSIONS:
+            last_screenshot = filepath
             log(f"New screenshot: {filepath.name}")
-            threading.Thread(target=monitor_screenshot, args=(filepath,), daemon=True).start()
+            notify(
+                "Screenshot saved!",
+                f"After sending - press Ctrl+Shift+D to delete it."
+            )
 
 
 # ── ZIP cleaner ───────────────────────────────────────────────────────────────
 
 def try_delete_archive(archive_path):
-    """Wait briefly then delete archive if matching folder exists."""
     archive_path = Path(archive_path)
-    time.sleep(5)  # wait for extraction to finish
-
-    # Check for folder with same stem name in same directory
+    time.sleep(5)
     extracted = archive_path.parent / archive_path.stem
     if not extracted.exists():
-        # Also check for folder without spaces/underscores variations
         return
-
     try:
         if archive_path.exists():
             archive_path.unlink()
@@ -116,12 +126,10 @@ class ZipCleanerHandler(FileSystemEventHandler):
             return
         new_folder = Path(event.src_path)
         parent = new_folder.parent
-
-        # Look for an archive with the same name as the new folder
         for ext in ARCHIVE_EXTENSIONS:
             archive = parent / (new_folder.name + ext)
             if archive.exists():
-                log(f"Extracted folder detected: {new_folder.name}/ -> will delete {archive.name}")
+                log(f"Extracted: {new_folder.name}/ -> will delete {archive.name}")
                 threading.Thread(target=try_delete_archive, args=(archive,), daemon=True).start()
 
 
@@ -130,16 +138,15 @@ class ZipCleanerHandler(FileSystemEventHandler):
 def run():
     observers = []
 
-    # Screenshot watcher
     if not SCREENSHOT_FOLDER.exists():
         SCREENSHOT_FOLDER.mkdir(parents=True, exist_ok=True)
+
     obs_screenshot = Observer()
     obs_screenshot.schedule(ScreenshotHandler(), str(SCREENSHOT_FOLDER), recursive=True)
     obs_screenshot.start()
     observers.append(obs_screenshot)
     log(f"Screenshots watching: {SCREENSHOT_FOLDER}")
 
-    # ZIP watcher
     for folder in ZIP_WATCH_FOLDERS:
         if folder.exists():
             obs_zip = Observer()
@@ -147,6 +154,12 @@ def run():
             obs_zip.start()
             observers.append(obs_zip)
             log(f"ZIP watching: {folder}")
+
+    if HOTKEY_AVAILABLE:
+        keyboard.add_hotkey(DELETE_HOTKEY, delete_sent_screenshot)
+        log(f"Hotkey ready: {DELETE_HOTKEY.upper()} = delete last screenshot")
+    else:
+        log("WARNING: 'keyboard' library not installed, hotkey disabled")
 
     log("Agent running. Press Ctrl+C to stop.")
 

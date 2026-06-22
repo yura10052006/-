@@ -13,7 +13,7 @@ if %errorlevel% neq 0 (
 echo [OK] Python found
 
 echo Installing dependencies...
-pip install watchdog psutil --quiet
+pip install watchdog psutil keyboard plyer --quiet
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to install dependencies
     pause
