@@ -20,8 +20,9 @@
       --bronze: #8A6A4A;
       --dark:   #1C1917;
     }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    html { overflow-x: clip; }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); overflow-x: clip; -webkit-overflow-scrolling: touch; -webkit-font-smoothing: antialiased; }
     img { display: block; width: 100%; }
     a { color: inherit; }
     button { font-family: inherit; cursor: pointer; }
