@@ -59,12 +59,12 @@
     .hero-ov { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(28,25,23,.12) 0%, rgba(28,25,23,.04) 35%, rgba(28,25,23,.6) 100%); }
     .hero-cnt { position:absolute; bottom:0; left:0; right:0; padding:36px 20px 44px; color:white; }
     @media(min-width:768px){ .hero-cnt { padding:60px 60px 68px; max-width:800px; } }
-    .hero-eye { font-size:10px; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:14px; opacity:0; }
+    .hero-eye { font-size:10px; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:14px; }
     .hero-h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(46px,9vw,94px); font-weight:300; line-height:1; letter-spacing:-.02em; margin-bottom:18px; }
     .hero-h1 span { display:block; overflow:hidden; }
-    .hero-h1 span > em { display:block; font-style:italic; transform:translateY(100%); }
-    .hero-sub { font-size:14px; font-weight:300; line-height:1.65; color:rgba(255,255,255,.7); margin-bottom:28px; opacity:0; max-width:400px; }
-    .hero-ctas { display:flex; gap:10px; flex-wrap:wrap; opacity:0; }
+    .hero-h1 span > em { display:block; font-style:italic; }
+    .hero-sub { font-size:14px; font-weight:300; line-height:1.65; color:rgba(255,255,255,.7); margin-bottom:28px; max-width:440px; }
+    .hero-ctas { display:flex; gap:10px; flex-wrap:wrap; }
     .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 24px; font-size:12px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; border-radius:2px; border:none; transition:all .25s; cursor:pointer; }
     .btn-wh { background:white; color:var(--text); }
     .btn-wh:hover { background:var(--bg); }
@@ -74,7 +74,7 @@
     .btn-acc:hover { background:#8e3f2a; }
     .btn-od { border:1px solid var(--border); color:var(--text); background:transparent; }
     .btn-od:hover { background:var(--bg); }
-    .hero-scroll { position:absolute; bottom:20px; right:20px; display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.4); font-size:9px; letter-spacing:.22em; text-transform:uppercase; opacity:0; }
+    .hero-scroll { position:absolute; bottom:20px; right:20px; display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.4); font-size:9px; letter-spacing:.22em; text-transform:uppercase; }
     @media(min-width:768px){ .hero-scroll { right:56px; } }
     .h-track { width:36px; height:1px; background:rgba(255,255,255,.2); position:relative; overflow:hidden; }
     .h-track::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:white; animation:tr 2s ease-in-out infinite; }
@@ -223,11 +223,20 @@
     .ft-bot a { color:rgba(255,255,255,.28); text-decoration:none; transition:color .2s; }
     .ft-bot a:hover { color:rgba(255,255,255,.7); }
 
-    /* ANIMATIONS */
-    .au { opacity:0; transform:translateY(28px); }
-    .af { opacity:0; }
-    .al { opacity:0; transform:translateX(-28px); }
+    /* ANIMATIONS — initial hidden state set by JS, not CSS */
+    .au { }
+    .af { }
+    .al { }
+    .js-ready .au { opacity:0; transform:translateY(28px); }
+    .js-ready .af { opacity:0; }
+    .js-ready .al { opacity:0; transform:translateX(-28px); }
     .done { opacity:1 !important; transform:none !important; transition:opacity .65s ease, transform .65s ease; }
+    /* hero elements hidden via js-ready too */
+    .js-ready .hero-eye { opacity:0; }
+    .js-ready .hero-sub { opacity:0; }
+    .js-ready .hero-ctas { opacity:0; }
+    .js-ready .hero-scroll { opacity:0; }
+    .js-ready .hero-h1 span > em { transform:translateY(100%); }
   </style>
 </head>
 <body>
@@ -266,13 +275,13 @@
   </div>
   <div class="hero-ov"></div>
   <div class="hero-cnt">
-    <p class="hero-eye" id="he">Львів · Центр міста · 4 готелі</p>
+    <p class="hero-eye" id="he">Львів · 4 готелі · 72 номери</p>
     <h1 class="hero-h1">
       <span><em id="ht1">Живіть</em></span>
       <span><em id="ht2">всередині</em></span>
       <span><em id="ht3">Львова</em></span>
     </h1>
-    <p class="hero-sub" id="hs">Чотири будинки початку XX ст. в самому серці міста</p>
+    <p class="hero-sub" id="hs">Чотири будинки початку XX ст. — Шпитальна, Зелена, Мудрого, Романа</p>
     <div class="hero-ctas" id="hb">
       <a href="#hotels" class="btn btn-wh">Обрати готель</a>
       <a href="#bstrip" class="btn btn-gh">Забронювати</a>
@@ -286,7 +295,7 @@
   <div class="stats-in">
     <div class="au"><span class="stat-n">4</span><span class="stat-l">Готелі</span></div>
     <div class="stat-sep"></div>
-    <div class="au"><span class="stat-n">92</span><span class="stat-l">Номери</span></div>
+    <div class="au"><span class="stat-n">72</span><span class="stat-l">Номери</span></div>
     <div class="stat-sep"></div>
     <div class="au"><span class="stat-n">8.7</span><span class="stat-l">Booking.com</span></div>
     <div class="stat-sep"></div>
@@ -298,11 +307,16 @@
 <div class="bstrip" id="bstrip">
   <div class="bstrip-in">
     <div class="bf"><label>Готель</label>
-      <select><option>Heritage — Зустрічна, 1</option><option>Opera — Шпитальна, 21</option><option>Garden — Зелена, 44а</option><option>Central — Мудрого, 33</option></select>
+      <select>
+        <option>Шпитальна, 21 — 18 номерів</option>
+        <option>Зелена, 44а — 31 номер</option>
+        <option>Ярослава Мудрого, 33 — 15 номерів</option>
+        <option>Князя Романа, 12 — 8 номерів</option>
+      </select>
     </div>
     <div class="bf"><label>Заїзд</label><input type="date"/></div>
     <div class="bf"><label>Виїзд</label><input type="date"/></div>
-    <button class="bsub">Перевірити →</button>
+    <button class="bsub" onclick="window.open('https://potupa-hotel.com','_blank')">Перевірити →</button>
   </div>
 </div>
 
@@ -314,40 +328,23 @@
         <div class="lbl au">Наші готелі</div>
         <h2 class="h2 au">Чотири будинки.<br><em>Один характер.</em></h2>
       </div>
-      <p class="lead au" style="margin-top:0;max-width:360px;">Всі готелі — пішохідна доступність до головних пам'яток Львова.</p>
+      <p class="lead au" style="margin-top:0;max-width:380px;">Всі готелі — пішохідна доступність до площі Ринок та Оперного театру.</p>
     </div>
   </div>
   <div class="hotels-grid">
 
-    <a href="#contact" class="hi au">
+    <!-- Shpytalna -->
+    <a href="https://potupa-hotel.com" target="_blank" class="hi au">
       <div class="hi-img">
-        <img src="https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=900&q=80" alt="Heritage" loading="lazy"/>
-        <span class="hi-tag">★ Пам'ятка архітектури</span>
-      </div>
-      <div class="hi-body">
-        <div class="hi-num">01 — Heritage</div>
-        <div class="hi-name">Potupa Heritage</div>
-        <div class="hi-addr">вул. Зустрічна, 1</div>
-        <p class="hi-desc">Будинок 1890 р. — пам'ятка архітектури доби Австро-Угорщини. Оригінальна ліпнина, авторський інтер'єр з темою велосипедного руху. 28 номерів.</p>
-        <div class="hi-tags"><span class="ftag">28 номерів</span><span class="ftag">1890 рік</span><span class="ftag">Авт. інтер'єр</span><span class="ftag">Wi-Fi</span></div>
-        <div class="hi-foot">
-          <div><div class="price-f">від</div><span class="price-a">€55</span><span class="price-n">/ніч</span></div>
-          <span class="hi-cta">Забронювати →</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="#contact" class="hi au">
-      <div class="hi-img">
-        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80" alt="Opera" loading="lazy"/>
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80" alt="Potupa Шпитальна" loading="lazy"/>
         <span class="hi-tag">🎭 5 хв від Оперного</span>
       </div>
       <div class="hi-body">
-        <div class="hi-num">02 — Opera</div>
-        <div class="hi-name">Potupa Opera</div>
+        <div class="hi-num">01 — Shpytalna</div>
+        <div class="hi-name">Potupa Шпитальна</div>
         <div class="hi-addr">вул. Шпитальна, 21</div>
-        <p class="hi-desc">Кілька хвилин від Краківського ринку та Оперного театру. Класичний інтер'єр з вітражами та ліпниною. 18 номерів у самому серці туристичного Львова.</p>
-        <div class="hi-tags"><span class="ftag">18 номерів</span><span class="ftag">Вітражі</span><span class="ftag">Краківський ринок</span><span class="ftag">Wi-Fi</span></div>
+        <p class="hi-desc">Відреставрований будинок у центральному дворику. Авторські ковані вироби, вітражі та картини старого Кракова. Затишний дворик з фонтаном. 18 номерів у кроці від Оперного та Краківського ринку.</p>
+        <div class="hi-tags"><span class="ftag">18 номерів</span><span class="ftag">Вітражі</span><span class="ftag">Дворик</span><span class="ftag">Wi-Fi</span></div>
         <div class="hi-foot">
           <div><div class="price-f">від</div><span class="price-a">€50</span><span class="price-n">/ніч</span></div>
           <span class="hi-cta">Забронювати →</span>
@@ -355,17 +352,18 @@
       </div>
     </a>
 
-    <a href="#contact" class="hi au">
+    <!-- Zelena -->
+    <a href="https://potupa-hotel.com" target="_blank" class="hi au">
       <div class="hi-img">
-        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=900&q=80" alt="Garden" loading="lazy"/>
+        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=900&q=80" alt="Potupa Зелена" loading="lazy"/>
         <span class="hi-tag">🌿 Тихий квартал</span>
       </div>
       <div class="hi-body">
-        <div class="hi-num">03 — Garden</div>
-        <div class="hi-name">Potupa Garden</div>
+        <div class="hi-num">02 — Zelena</div>
+        <div class="hi-name">Potupa Зелена</div>
         <div class="hi-addr">вул. Зелена, 44а</div>
-        <p class="hi-desc">Спокійний район з красивою архітектурою початку XX ст. 31 простором номер з панорамними вікнами. Ідеально для тих, хто шукає тишу в центрі.</p>
-        <div class="hi-tags"><span class="ftag">31 номер</span><span class="ftag">Тиха вулиця</span><span class="ftag">Паркінг поруч</span><span class="ftag">Wi-Fi</span></div>
+        <p class="hi-desc">Найбільший готель мережі у районі з неперевершеною австро-угорською та польською архітектурою 1900–1930-х рр. Тихий квартал, просторі номери, розвинена інфраструктура поруч. 31 номер.</p>
+        <div class="hi-tags"><span class="ftag">31 номер</span><span class="ftag">Тихий район</span><span class="ftag">Паркінг</span><span class="ftag">Wi-Fi</span></div>
         <div class="hi-foot">
           <div><div class="price-f">від</div><span class="price-a">€45</span><span class="price-n">/ніч</span></div>
           <span class="hi-cta">Забронювати →</span>
@@ -373,19 +371,39 @@
       </div>
     </a>
 
-    <a href="#contact" class="hi au">
+    <!-- Mudroho -->
+    <a href="https://potupa-hotel.com" target="_blank" class="hi au">
       <div class="hi-img">
-        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=900&q=80" alt="Central" loading="lazy"/>
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80" alt="Potupa Мудрого" loading="lazy"/>
         <span class="hi-tag">📍 Ближній центр</span>
       </div>
       <div class="hi-body">
-        <div class="hi-num">04 — Central</div>
-        <div class="hi-name">Potupa Central</div>
+        <div class="hi-num">03 — Mudroho</div>
+        <div class="hi-name">Potupa Мудрого</div>
         <div class="hi-addr">вул. Ярослава Мудрого, 33</div>
-        <p class="hi-desc">Затишний класичний інтер'єр з вітражами та ліпниною у ближньому центрі. 15 продуманих номерів — ідеально для бізнес-поїздок.</p>
-        <div class="hi-tags"><span class="ftag">15 номерів</span><span class="ftag">Вітражі</span><span class="ftag">Бізнес</span><span class="ftag">Wi-Fi</span></div>
+        <p class="hi-desc">Класичний інтер'єр з вітражами, ліпниною та скульптурними рельєфами. Затишний готель у ближньому центрі міста. 15 продуманих номерів — ідеально для ділових поїздок та сімейного відпочинку.</p>
+        <div class="hi-tags"><span class="ftag">15 номерів</span><span class="ftag">Ліпнина</span><span class="ftag">Вітражі</span><span class="ftag">Wi-Fi</span></div>
         <div class="hi-foot">
           <div><div class="price-f">від</div><span class="price-a">€48</span><span class="price-n">/ніч</span></div>
+          <span class="hi-cta">Забронювати →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Romana -->
+    <a href="https://potupa-hotel.com" target="_blank" class="hi au">
+      <div class="hi-img">
+        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe2e2?w=900&q=80" alt="Potupa Романа" loading="lazy"/>
+        <span class="hi-tag">⚜ Будинок 1911 р.</span>
+      </div>
+      <div class="hi-body">
+        <div class="hi-num">04 — Romana</div>
+        <div class="hi-name">Potupa Романа</div>
+        <div class="hi-addr">вул. Князя Романа, 12</div>
+        <p class="hi-desc">Колишній готель "Австрія" 1911 року — справжня пам'ятка австрійської архітектури поруч із пам'ятником Князю Роману. Камерний міні-готель на 8 номерів зі збереженим духом епохи.</p>
+        <div class="hi-tags"><span class="ftag">8 номерів</span><span class="ftag">1911 рік</span><span class="ftag">Пам'ятка</span><span class="ftag">Wi-Fi</span></div>
+        <div class="hi-foot">
+          <div><div class="price-f">від</div><span class="price-a">€55</span><span class="price-n">/ніч</span></div>
           <span class="hi-cta">Забронювати →</span>
         </div>
       </div>
@@ -397,19 +415,19 @@
 <!-- FEATURES -->
 <div class="feat-sec">
   <div class="feat-grid">
-    <div class="fi au"><div class="fi-ico">⌖</div><div class="fi-t">Центр міста</div><div class="fi-d">Всі 4 готелі — пішохідна доступність до площі Ринок та Оперного.</div></div>
-    <div class="fi au"><div class="fi-ico">⚜</div><div class="fi-t">Спадщина</div><div class="fi-d">Будинки 1890–1920 рр. з оригінальними фасадами, вітражами і ліпниною.</div></div>
-    <div class="fi au"><div class="fi-ico">◈</div><div class="fi-t">Характер</div><div class="fi-d">Жодних двох однакових. Кожен готель — авторський інтер'єр і своя душа.</div></div>
-    <div class="fi au"><div class="fi-ico">✦</div><div class="fi-t">Чесна ціна</div><div class="fi-d">Розумна цінова політика без зайвих націнок. Якість і комфорт за прозорою ціною.</div></div>
+    <div class="fi au"><div class="fi-ico">⌖</div><div class="fi-t">Центр міста</div><div class="fi-d">Всі 4 готелі — пішохідна доступність до площі Ринок та Оперного театру.</div></div>
+    <div class="fi au"><div class="fi-ico">⚜</div><div class="fi-t">Спадщина</div><div class="fi-d">Будинки 1890–1920 рр. з оригінальними фасадами, вітражами, ліпниною та коваными виробами.</div></div>
+    <div class="fi au"><div class="fi-ico">◈</div><div class="fi-t">Характер</div><div class="fi-d">Жодних двох однакових. Кожен готель — авторський інтер'єр зі своєю душею.</div></div>
+    <div class="fi au"><div class="fi-ico">✦</div><div class="fi-t">Чесна ціна</div><div class="fi-d">3-зіркові стандарти комфорту без зайвих націнок. Прозора ціна, зручне розташування.</div></div>
   </div>
 </div>
 
 <!-- GALLERY -->
 <div class="gallery">
   <div class="gi"><img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1200&q=80" alt="" loading="lazy"/></div>
-  <div class="gi"><img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80" alt="" loading="lazy"/></div>
   <div class="gi"><img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80" alt="" loading="lazy"/></div>
   <div class="gi"><img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80" alt="" loading="lazy"/></div>
+  <div class="gi"><img src="https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=600&q=80" alt="" loading="lazy"/></div>
   <div class="gi"><img src="https://images.unsplash.com/photo-1541971297127-c4e6a5a6ac5d?w=600&q=80" alt="" loading="lazy"/></div>
 </div>
 
@@ -422,15 +440,15 @@
         <div class="ab-cap">Львів · 1890–1920</div>
       </div>
       <div>
-        <div class="lbl au">Наша історія</div>
-        <h2 class="h2 au">Місто, що<br><em>пам'ятає все</em></h2>
+        <div class="lbl au">Наша філософія</div>
+        <h2 class="h2 au">Прагматизм,<br><em>практичність, комфорт</em></h2>
         <div class="ab-div au"></div>
         <div class="ab-txt au">
-          <p>Львів будували на перетині культур. Австро-Угорщина залишила тут не просто будівлі — вона залишила спосіб жити: неспішно, з деталями, з характером.</p>
-          <p>Potupa — це чотири будинки початку XX ст. у центральних кварталах міста. Кожен — окрема історія і архітектурний почерк. Ми не приховуємо вік — ми ним пишаємось.</p>
-          <p>Розумна ціна. Центр. І те відчуття, коли розумієш: тут можна було б і залишитись.</p>
+          <p>Potupa Family Hotel Group — мережа готелів у самому серці Львова, яка ставить на перше місце прагматизм, практичність та комфорт. Без зайвих витрат на показну розкіш — лише те, що справді важливо гостям.</p>
+          <p>Чотири будинки початку XX ст. — Шпитальна, Зелена, Мудрого, Романа. Кожен зберігає оригінальні вітражі, ліпнину та австро-угорський дух. Усі номери відповідають 3-зірковим стандартам мережі.</p>
+          <p>Центр міста. Розумна ціна. І відчуття, що Львів — ваш.</p>
         </div>
-        <div style="margin-top:28px" class="au"><a href="#contact" class="btn btn-acc">Зв'язатися →</a></div>
+        <div style="margin-top:28px" class="au"><a href="https://potupa-hotel.com" target="_blank" class="btn btn-acc">Офіційний сайт →</a></div>
       </div>
     </div>
   </div>
@@ -451,9 +469,9 @@
       </div>
     </div>
     <div class="rv-grid">
-      <div class="rc au"><div class="rc-stars">★★★★★</div><div class="rc-txt">"Неймовірна атмосфера. Відчувається, що будинку 100 років, але все ідеально підтримується."</div><div><div class="rc-au">Марта К. — Варшава</div><div class="rc-src">Heritage · Booking.com</div></div></div>
-      <div class="rc au"><div class="rc-stars">★★★★★</div><div class="rc-txt">"Все продумано до дрібниць. Персонал привітний, розташування — краще не придумаєш."</div><div><div class="rc-au">Олексій Т. — Київ</div><div class="rc-src">Opera · Google</div></div></div>
-      <div class="rc au"><div class="rc-stars">★★★★☆</div><div class="rc-txt">"Дуже гарне співвідношення ціни та якості. Домашня атмосфера, чисто, тихо."</div><div><div class="rc-au">Anna W. — Kraków</div><div class="rc-src">Garden · TripAdvisor</div></div></div>
+      <div class="rc au"><div class="rc-stars">★★★★★</div><div class="rc-txt">"Неймовірна атмосфера. Вітражі, ковані деталі — справжня атмосфера старого Львова. Повернемось точно."</div><div><div class="rc-au">Марта К. — Варшава</div><div class="rc-src">Шпитальна · Booking.com</div></div></div>
+      <div class="rc au"><div class="rc-stars">★★★★★</div><div class="rc-txt">"Все продумано до дрібниць. Персонал привітний, локація — краще не буває. 10/10."</div><div><div class="rc-au">Олексій Т. — Київ</div><div class="rc-src">Мудрого · Google</div></div></div>
+      <div class="rc au"><div class="rc-stars">★★★★☆</div><div class="rc-txt">"Чудове співвідношення ціни та якості. Тихий двір на Зеленій — окремий плюс. Рекомендую."</div><div><div class="rc-au">Anna W. — Kraków</div><div class="rc-src">Зелена · TripAdvisor</div></div></div>
     </div>
   </div>
 </section>
@@ -466,26 +484,51 @@
         <div class="lbl au">Контакти</div>
         <h2 class="h2 au">Зв'яжіться<br><em>з нами</em></h2>
         <div class="ct-items">
-          <div class="au"><div class="ct-lbl">Телефон</div><a href="tel:+380322000000" class="ct-val">+38 032 200 00 00</a><div class="ct-sub">Щодня 08:00 — 22:00</div></div>
-          <div class="au"><div class="ct-lbl">Email</div><a href="mailto:info@potupa-hotel.com" class="ct-val">info@potupa-hotel.com</a></div>
+          <div class="au">
+            <div class="ct-lbl">Офіційний сайт</div>
+            <a href="https://potupa-hotel.com" target="_blank" class="ct-val">potupa-hotel.com</a>
+            <div class="ct-sub">Бронювання та актуальні ціни</div>
+          </div>
+          <div class="au">
+            <div class="ct-lbl">Email</div>
+            <a href="mailto:info@potupa-hotel.com" class="ct-val">info@potupa-hotel.com</a>
+          </div>
           <div class="au">
             <div class="ct-lbl">Адреси готелів</div>
             <div class="hlist">
-              <a href="#hotels" class="hli"><div class="hli-n">01</div><div class="hli-i"><div class="hli-nm">Potupa Heritage</div><div class="hli-ad">вул. Зустрічна, 1 · 28 номерів</div></div><span class="hli-ar">→</span></a>
-              <a href="#hotels" class="hli"><div class="hli-n">02</div><div class="hli-i"><div class="hli-nm">Potupa Opera</div><div class="hli-ad">вул. Шпитальна, 21 · 18 номерів</div></div><span class="hli-ar">→</span></a>
-              <a href="#hotels" class="hli"><div class="hli-n">03</div><div class="hli-i"><div class="hli-nm">Potupa Garden</div><div class="hli-ad">вул. Зелена, 44а · 31 номер</div></div><span class="hli-ar">→</span></a>
-              <a href="#hotels" class="hli"><div class="hli-n">04</div><div class="hli-i"><div class="hli-nm">Potupa Central</div><div class="hli-ad">вул. Ярослава Мудрого, 33 · 15 номерів</div></div><span class="hli-ar">→</span></a>
+              <a href="https://maps.google.com/?q=Shpytalna+21+Lviv" target="_blank" class="hli">
+                <div class="hli-n">01</div>
+                <div class="hli-i"><div class="hli-nm">Potupa Шпитальна</div><div class="hli-ad">вул. Шпитальна, 21 · 18 номерів</div></div>
+                <span class="hli-ar">→</span>
+              </a>
+              <a href="https://maps.google.com/?q=Zelena+44a+Lviv" target="_blank" class="hli">
+                <div class="hli-n">02</div>
+                <div class="hli-i"><div class="hli-nm">Potupa Зелена</div><div class="hli-ad">вул. Зелена, 44а · 31 номер</div></div>
+                <span class="hli-ar">→</span>
+              </a>
+              <a href="https://maps.google.com/?q=Yaroslava+Mudroho+33+Lviv" target="_blank" class="hli">
+                <div class="hli-n">03</div>
+                <div class="hli-i"><div class="hli-nm">Potupa Мудрого</div><div class="hli-ad">вул. Ярослава Мудрого, 33 · 15 номерів</div></div>
+                <span class="hli-ar">→</span>
+              </a>
+              <a href="https://maps.google.com/?q=Knyazya+Romana+12+Lviv" target="_blank" class="hli">
+                <div class="hli-n">04</div>
+                <div class="hli-i"><div class="hli-nm">Potupa Романа</div><div class="hli-ad">вул. Князя Романа, 12 · 8 номерів</div></div>
+                <span class="hli-ar">→</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
       <div class="au">
         <div class="map-wrap">
-          <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=23.96,49.83,24.02,49.855&layer=mapnik" allowfullscreen loading="lazy" title="Львів"></iframe>
+          <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=23.998,49.833,24.052,49.853&layer=mapnik&marker=49.843,24.025"
+            allowfullscreen loading="lazy" title="Готелі Potupa у Львові"></iframe>
         </div>
         <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
-          <a href="#bstrip" class="btn btn-acc" style="flex:1;justify-content:center;">Забронювати номер</a>
-          <a href="https://potupa-hotel.com" target="_blank" class="btn btn-od" style="flex:1;justify-content:center;">Офіційний сайт</a>
+          <a href="https://potupa-hotel.com" target="_blank" class="btn btn-acc" style="flex:1;justify-content:center;">Забронювати номер</a>
+          <a href="mailto:info@potupa-hotel.com" class="btn btn-od" style="flex:1;justify-content:center;">Написати нам</a>
         </div>
       </div>
     </div>
@@ -498,16 +541,19 @@
     <div>
       <div class="ft-logo">POTUPA</div>
       <div class="ft-sub">Family Hotel Group</div>
-      <p class="ft-desc">Чотири будинки з душею в серці Львова. Автентична архітектура, розумна ціна.</p>
-      <div class="ft-soc"><a class="soc" href="#">IG</a><a class="soc" href="#">FB</a><a class="soc" href="#">TK</a></div>
+      <p class="ft-desc">Чотири будинки з душею в серці Львова. Прагматизм, практичність, комфорт за розумною ціною.</p>
+      <div class="ft-soc">
+        <a class="soc" href="https://potupa-hotel.com" target="_blank">IG</a>
+        <a class="soc" href="https://potupa-hotel.com" target="_blank">FB</a>
+      </div>
     </div>
     <div class="ft-col">
       <h4>Готелі</h4>
       <ul>
-        <li><a href="#hotels">Heritage · Зустрічна, 1</a></li>
-        <li><a href="#hotels">Opera · Шпитальна, 21</a></li>
-        <li><a href="#hotels">Garden · Зелена, 44а</a></li>
-        <li><a href="#hotels">Central · Мудрого, 33</a></li>
+        <li><a href="#hotels">Шпитальна, 21</a></li>
+        <li><a href="#hotels">Зелена, 44а</a></li>
+        <li><a href="#hotels">Ярослава Мудрого, 33</a></li>
+        <li><a href="#hotels">Князя Романа, 12</a></li>
       </ul>
     </div>
     <div class="ft-col">
@@ -516,23 +562,25 @@
         <li><a href="#about">Про нас</a></li>
         <li><a href="#reviews">Відгуки</a></li>
         <li><a href="#contact">Контакти</a></li>
-        <li><a href="https://potupa-hotel.com">Офіційний сайт</a></li>
+        <li><a href="https://potupa-hotel.com" target="_blank">Офіційний сайт</a></li>
       </ul>
     </div>
   </div>
   <div class="ft-bot">
-    <span>© 2026 Potupa Family Hotel Group</span>
-    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#">Конфіденційність</a><a href="#">Умови бронювання</a></div>
+    <span>© 2026 Potupa Family Hotel Group — Львів</span>
+    <div style="display:flex;gap:18px;flex-wrap:wrap">
+      <a href="https://potupa-hotel.com" target="_blank">potupa-hotel.com</a>
+      <a href="mailto:info@potupa-hotel.com">info@potupa-hotel.com</a>
+    </div>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
-  // Navbar scroll
+  // ── Always-on: navbar, burger, IntersectionObserver ──────────────────────
+
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 20), {passive:true});
 
-  // Burger
   const brg = document.getElementById('brg');
   const mm  = document.getElementById('mmenu');
   brg.addEventListener('click', () => {
@@ -546,25 +594,10 @@
     document.body.style.overflow = '';
   }
 
-  // Hero entrance
-  const tl = gsap.timeline({delay:.25});
-  tl
-    .from('.hero-bg img', {scale:1.07, duration:2.2, ease:'power2.out'})
-    .from('#he',  {opacity:0, y:14, duration:.5}, '-=1.5')
-    .to('#ht1',   {y:'0%', duration:.6, ease:'power3.out'}, '-=1.2')
-    .to('#ht2',   {y:'0%', duration:.6, ease:'power3.out'}, '-=.48')
-    .to('#ht3',   {y:'0%', duration:.6, ease:'power3.out'}, '-=.48')
-    .from('#hs',  {opacity:0, y:14, duration:.45}, '-=.3')
-    .from('#hb',  {opacity:0, y:10, duration:.4},  '-=.2')
-    .from('#hsc', {opacity:0, duration:.4}, '-=.1');
+  // Mark body as JS-ready so CSS hides elements for animation
+  document.body.classList.add('js-ready');
 
-  // Hero parallax
-  gsap.to('.hero-bg img', {
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.2 },
-    y: 90, ease: 'none'
-  });
-
-  // Scroll reveals via IntersectionObserver (works well on mobile)
+  // Scroll reveals — works with or without GSAP
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
@@ -577,15 +610,56 @@
       setTimeout(() => e.target.classList.add('done'), delay * 1000);
       io.unobserve(e.target);
     });
-  }, {threshold: 0.1, rootMargin: '0px 0px -36px 0px'});
+  }, {threshold: 0.08, rootMargin: '0px 0px -30px 0px'});
   document.querySelectorAll('.au,.af,.al').forEach(el => io.observe(el));
+</script>
 
-  // About image parallax
-  if (window.matchMedia('(min-width:768px)').matches) {
-    gsap.to('.ab-img img', {
-      scrollTrigger: { trigger: '.about-sec', start: 'top bottom', end: 'bottom top', scrub: 1.4 },
-      y: -48, ease: 'none'
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+  onload="initGsap()"
+  onerror="revealHero()"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+  onload="if(window.gsap&&window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger);addParallax();}"
+  onerror="void 0"></script>
+
+<script>
+  function revealHero() {
+    // Fallback: show hero immediately if GSAP didn't load
+    ['.hero-eye','.hero-sub','.hero-ctas','.hero-scroll'].forEach(s => {
+      const el = document.querySelector(s);
+      if (el) { el.style.opacity = '1'; el.style.transform = 'none'; }
     });
+    document.querySelectorAll('.hero-h1 span > em').forEach(el => {
+      el.style.transform = 'none'; el.style.transition = 'none';
+    });
+  }
+
+  function initGsap() {
+    if (typeof gsap === 'undefined') { revealHero(); return; }
+
+    const tl = gsap.timeline({delay: .2, onComplete: () => {}});
+    tl
+      .from('.hero-bg img', {scale:1.07, duration:2.0, ease:'power2.out'})
+      .from('.hero-eye',   {opacity:0, y:12, duration:.45}, '-=1.4')
+      .to('#ht1',  {y:'0%', duration:.55, ease:'power3.out'}, '-=1.1')
+      .to('#ht2',  {y:'0%', duration:.55, ease:'power3.out'}, '-=.44')
+      .to('#ht3',  {y:'0%', duration:.55, ease:'power3.out'}, '-=.44')
+      .from('.hero-sub',   {opacity:0, y:12, duration:.4},  '-=.25')
+      .from('.hero-ctas',  {opacity:0, y:8,  duration:.35}, '-=.18')
+      .from('.hero-scroll',{opacity:0, duration:.35},       '-=.1');
+  }
+
+  function addParallax() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.to('.hero-bg img', {
+      scrollTrigger: {trigger:'.hero', start:'top top', end:'bottom top', scrub:1.2},
+      y: 90, ease:'none'
+    });
+    if (window.matchMedia('(min-width:768px)').matches) {
+      gsap.to('.ab-img img', {
+        scrollTrigger: {trigger:'.about-sec', start:'top bottom', end:'bottom top', scrub:1.4},
+        y: -48, ease:'none'
+      });
+    }
   }
 </script>
 </body>
