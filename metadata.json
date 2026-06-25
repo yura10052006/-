@@ -1,0 +1,6 @@
+{
+  "name": "Командний калькулятор зарплати",
+  "description": "Мобільний командний калькулятор зарплат з календарем відпрацьованих днів, аналітикою та кабінетом адміна.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
