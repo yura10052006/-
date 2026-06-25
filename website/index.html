@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Potupa Family Hotel Group — Львів</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --iron:      #1E2B3A;
+      --terra:     #B85C42;
+      --parchment: #F2E8D5;
+      --bronze:    #A8844A;
+      --green:     #3D5E42;
+      --chalk:     #FAFAF8;
+      --terra-dark:#8E3F2A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--chalk);
+      color: var(--iron);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CUSTOM CURSOR ──────────────────────────────── */
+    .cursor-dot {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--terra); pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    }
+    .cursor-ring {
+      position: fixed; top: 0; left: 0; z-index: 9998;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid var(--terra); pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), width 0.35s ease, height 0.35s ease, border-color 0.3s ease;
+    }
+    body:has(.hotel-card:hover) .cursor-ring,
+    body:has(.btn:hover) .cursor-ring  { width: 64px; height: 64px; border-color: var(--bronze); }
+
+    /* ─── NAVBAR ────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      padding: 14px 60px;
+      box-shadow: 0 2px 30px rgba(30,43,58,0.08);
+    }
+    .nav-logo {
+      display: flex; flex-direction: column; gap: 1px;
+      text-decoration: none; color: white;
+      transition: color 0.4s;
+    }
+    nav.scrolled .nav-logo { color: var(--iron); }
+    .nav-logo-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600; letter-spacing: 0.12em;
+      line-height: 1;
+    }
+    .nav-logo-sub {
+      font-size: 9px; font-weight: 500; letter-spacing: 0.25em;
+      text-transform: uppercase; opacity: 0.7;
+    }
+    .nav-links {
+      display: flex; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; font-size: 13px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.85); transition: color 0.3s;
+      position: relative;
+    }
+    nav.scrolled .nav-links a { color: var(--iron); }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1.5px; background: var(--terra);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:hover { color: var(--terra) !important; }
+
+    .nav-book {
+      background: var(--terra); color: white !important;
+      padding: 10px 24px; border-radius: 2px;
+      font-size: 12px !important; font-weight: 600 !important;
+      letter-spacing: 0.12em !important; text-transform: uppercase !important;
+      transition: background 0.3s ease, transform 0.2s ease !important;
+    }
+    .nav-book::after { display: none !important; }
+    .nav-book:hover { background: var(--terra-dark) !important; transform: translateY(-1px); }
+
+    /* ─── LANG SWITCHER ─────────────────────────────── */
+    .lang {
+      display: flex; gap: 8px; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.6);
+      transition: color 0.4s;
+    }
+    nav.scrolled .lang { color: rgba(30,43,58,0.5); }
+    .lang span { cursor: pointer; transition: color 0.2s; }
+    .lang span.active { color: var(--terra); }
+    .lang span:hover { color: var(--terra); }
+    .lang .sep { opacity: 0.3; }
+
+    /* ─── HERO ──────────────────────────────────────── */
+    #hero {
+      height: 100vh; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(10,18,28,0.55) 0%, rgba(10,18,28,0.25) 50%, rgba(10,18,28,0.6) 100%),
+        url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1800&q=80') center/cover no-repeat;
+      transform-origin: center;
+    }
+    .hero-content {
+      position: relative; z-index: 2; text-align: center; color: white;
+      padding: 0 20px;
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--bronze);
+      margin-bottom: 20px; opacity: 0;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(56px, 8vw, 108px);
+      font-weight: 600; line-height: 0.92;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+    }
+    .hero-title span { display: block; overflow: hidden; }
+    .hero-title span em {
+      display: block; font-style: italic; color: var(--parchment);
+      transform: translateY(100%);
+    }
+    .hero-sub {
+      font-size: 17px; font-weight: 300; letter-spacing: 0.03em;
+      color: rgba(255,255,255,0.75); margin-bottom: 48px; opacity: 0;
+    }
+    .hero-ctas { display: flex; gap: 16px; justify-content: center; opacity: 0; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 15px 36px; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px;
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+      cursor: none; border: none; outline: none;
+    }
+    .btn-primary { background: var(--terra); color: white; }
+    .btn-primary:hover { background: var(--terra-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,92,66,0.35); }
+    .btn-outline { border: 1.5px solid rgba(255,255,255,0.5); color: white; }
+    .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+    .btn-dark { background: var(--iron); color: white; }
+    .btn-dark:hover { background: #2d3f55; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(30,43,58,0.25); }
+
+    .hero-scroll {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.5); font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; z-index: 2; opacity: 0;
+    }
+    .scroll-line {
+      width: 1px; height: 48px; background: rgba(255,255,255,0.3);
+      position: relative; overflow: hidden;
+    }
+    .scroll-line::after {
+      content: ''; position: absolute; top: -100%; left: 0;
+      width: 100%; height: 100%; background: var(--terra);
+      animation: scrollDrop 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollDrop {
+      0% { top: -100%; } 100% { top: 100%; }
+    }
+
+    /* ─── BOOKING BAR ───────────────────────────────── */
+    #booking-bar {
+      background: var(--iron); padding: 0 60px;
+      position: sticky; top: 64px; z-index: 80;
+      box-shadow: 0 4px 30px rgba(30,43,58,0.15);
+    }
+    .booking-inner {
+      display: flex; align-items: stretch; gap: 0; max-width: 1200px; margin: 0 auto;
+    }
+    .booking-field {
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+      padding: 18px 24px; border-right: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; transition: background 0.2s;
+    }
+    .booking-field:hover { background: rgba(255,255,255,0.04); }
+    .booking-field label {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--bronze); margin-bottom: 5px;
+    }
+    .booking-field select, .booking-field input {
+      background: none; border: none; outline: none;
+      font-family: 'Inter', sans-serif; font-size: 14px;
+      color: white; cursor: pointer; width: 100%;
+    }
+    .booking-field select option { background: var(--iron); }
+    .booking-btn {
+      background: var(--terra); color: white; border: none;
+      padding: 0 40px; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.3s, transform 0.2s;
+      white-space: nowrap;
+    }
+    .booking-btn:hover { background: var(--terra-dark); }
+
+    /* ─── SECTION COMMON ────────────────────────────── */
+    section { padding: 100px 60px; }
+    .section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--bronze); margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 62px); font-weight: 600;
+      line-height: 1.05; letter-spacing: -0.01em; color: var(--iron);
+    }
+    .section-title em { font-style: italic; color: var(--terra); }
+
+    /* ─── HOTELS GRID ───────────────────────────────── */
+    #hotels { background: var(--chalk); }
+    .hotels-header { text-align: center; margin-bottom: 64px; }
+    .hotels-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+      max-width: 1400px; margin: 0 auto;
+    }
+    .hotel-card {
+      position: relative; border-radius: 4px; overflow: hidden;
+      cursor: none; text-decoration: none; color: inherit;
+      display: block;
+      box-shadow: 0 4px 20px rgba(30,43,58,0.08);
+      transition: box-shadow 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .hotel-card:hover {
+      box-shadow: 0 20px 60px rgba(30,43,58,0.18);
+      transform: translateY(-6px);
+    }
+    .hotel-card-img {
+      height: 340px; overflow: hidden; position: relative;
+    }
+    .hotel-card-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
+      display: block;
+    }
+    .hotel-card:hover .hotel-card-img img { transform: scale(1.07); }
+    .hotel-card-tag {
+      position: absolute; top: 16px; left: 16px;
+      background: var(--terra); color: white;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 5px 12px; border-radius: 2px;
+    }
+    .hotel-card-body { padding: 24px; background: white; }
+    .hotel-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 600; margin-bottom: 6px; color: var(--iron);
+    }
+    .hotel-card-addr {
+      font-size: 12px; color: var(--bronze); letter-spacing: 0.05em;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+    }
+    .hotel-card-addr::before {
+      content: ''; display: inline-block; width: 16px; height: 1px;
+      background: var(--bronze);
+    }
+    .hotel-card-desc {
+      font-size: 13px; line-height: 1.65; color: rgba(30,43,58,0.65);
+      margin-bottom: 20px;
+    }
+    .hotel-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 16px; border-top: 1px solid rgba(30,43,58,0.08);
+    }
+    .hotel-card-price { font-family: 'Cormorant Garamond', serif; }
+    .hotel-card-price .from { font-size: 10px; letter-spacing: 0.1em; color: rgba(30,43,58,0.4); text-transform: uppercase; }
+    .hotel-card-price .amount { font-size: 28px; font-weight: 600; color: var(--iron); }
+    .hotel-card-price .night { font-size: 11px; color: rgba(30,43,58,0.4); }
+    .hotel-card-link {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--terra);
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none; transition: gap 0.3s ease;
+    }
+    .hotel-card:hover .hotel-card-link { gap: 12px; }
+
+    /* ─── BRAND STORY ───────────────────────────────── */
+    #story {
+      background: var(--iron); color: white;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0;
+    }
+    .story-img {
+      position: relative; overflow: hidden; min-height: 600px;
+    }
+    .story-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.85) saturate(0.9) sepia(0.1);
+    }
+    .story-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(30,43,58,0.3) 0%, transparent 60%);
+    }
+    .story-content {
+      padding: 100px 80px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .story-content .section-label { color: var(--bronze); }
+    .story-content .section-title { color: white; margin-bottom: 32px; }
+    .story-text {
+      font-size: 16px; line-height: 1.85; color: rgba(255,255,255,0.65);
+      margin-bottom: 40px;
+    }
+    .story-text p + p { margin-top: 16px; }
+    .story-ornament {
+      width: 80px; height: 2px; background: var(--bronze); margin-bottom: 28px;
+    }
+
+    /* ─── PILLARS ───────────────────────────────────── */
+    #pillars { background: var(--parchment); }
+    .pillars-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .pillar { text-align: center; padding: 48px 32px; }
+    .pillar-icon {
+      width: 64px; height: 64px; margin: 0 auto 24px;
+      border: 1.5px solid var(--bronze); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: var(--bronze);
+      transition: all 0.35s ease;
+    }
+    .pillar:hover .pillar-icon {
+      background: var(--bronze); color: white; transform: scale(1.1);
+    }
+    .pillar-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 600; margin-bottom: 14px; color: var(--iron);
+    }
+    .pillar-text {
+      font-size: 14px; line-height: 1.75; color: rgba(30,43,58,0.65);
+    }
+
+    /* ─── STATS ─────────────────────────────────────── */
+    #stats { background: var(--terra); color: white; padding: 60px; }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      max-width: 1000px; margin: 0 auto; text-align: center;
+    }
+    .stat-item { padding: 20px; border-right: 1px solid rgba(255,255,255,0.2); }
+    .stat-item:last-child { border: none; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px; font-weight: 700; line-height: 1; color: white;
+    }
+    .stat-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.65); margin-top: 8px;
+    }
+
+    /* ─── REVIEWS ───────────────────────────────────── */
+    #reviews { background: white; }
+    .reviews-header { text-align: center; margin-bottom: 64px; }
+    .reviews-track { overflow: hidden; position: relative; }
+    .reviews-row {
+      display: flex; gap: 28px; transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .review-card {
+      flex: 0 0 calc(33.33% - 19px); background: var(--chalk);
+      padding: 40px; border-radius: 4px; border: 1px solid rgba(30,43,58,0.06);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .review-card:hover {
+      box-shadow: 0 12px 40px rgba(30,43,58,0.1); transform: translateY(-4px);
+    }
+    .review-stars { color: var(--terra); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+    .review-text {
+      font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic;
+      line-height: 1.65; color: var(--iron); margin-bottom: 20px;
+    }
+    .review-author { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--bronze); }
+    .review-source { font-size: 11px; color: rgba(30,43,58,0.4); }
+    .reviews-nav {
+      display: flex; gap: 12px; justify-content: center; margin-top: 48px;
+    }
+    .reviews-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: rgba(30,43,58,0.15);
+      cursor: pointer; transition: all 0.3s ease;
+    }
+    .reviews-dot.active { background: var(--terra); width: 28px; border-radius: 4px; }
+
+    /* ─── LVIV GUIDE ────────────────────────────────── */
+    #guide { background: var(--chalk); }
+    .guide-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 52px;
+    }
+    .guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .guide-card {
+      border-radius: 4px; overflow: hidden; background: white;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      cursor: none;
+    }
+    .guide-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(30,43,58,0.12); }
+    .guide-card-img { height: 200px; overflow: hidden; }
+    .guide-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .guide-card:hover .guide-card-img img { transform: scale(1.05); }
+    .guide-card-body { padding: 24px; }
+    .guide-tag {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 10px;
+    }
+    .guide-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600;
+      color: var(--iron); margin-bottom: 10px; line-height: 1.2;
+    }
+    .guide-desc { font-size: 13px; color: rgba(30,43,58,0.6); line-height: 1.65; }
+
+    /* ─── FOOTER ────────────────────────────────────── */
+    footer { background: var(--iron); color: white; padding: 80px 60px 40px; }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;
+      margin-bottom: 60px;
+    }
+    .footer-brand {}
+    .footer-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 6px;
+    }
+    .footer-logo-sub {
+      font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--bronze); margin-bottom: 20px;
+    }
+    .footer-tagline {
+      font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5);
+      margin-bottom: 28px; max-width: 260px;
+    }
+    .footer-socials { display: flex; gap: 14px; }
+    .social-btn {
+      width: 38px; height: 38px; border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: rgba(255,255,255,0.5); cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .social-btn:hover { border-color: var(--terra); color: var(--terra); background: rgba(184,92,66,0.1); }
+    .footer-col h4 {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--bronze); margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li + li { margin-top: 10px; }
+    .footer-col ul a {
+      text-decoration: none; font-size: 13px; color: rgba(255,255,255,0.5);
+      transition: color 0.2s; display: flex; align-items: center; gap: 8px;
+    }
+    .footer-col ul a::before {
+      content: ''; width: 12px; height: 1px; background: rgba(255,255,255,0.2);
+      transition: width 0.3s, background 0.3s;
+    }
+    .footer-col ul a:hover { color: white; }
+    .footer-col ul a:hover::before { width: 20px; background: var(--terra); }
+    .footer-contact { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.8; }
+    .footer-contact a { color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-contact a:hover { color: var(--terra); }
+
+    /* SVG Rooftop */
+    .footer-svg {
+      width: 100%; margin-bottom: 40px; opacity: 0.15;
+    }
+
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px; color: rgba(255,255,255,0.3);
+    }
+    .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s; }
+    .footer-bottom a:hover { color: rgba(255,255,255,0.8); }
+
+    /* ─── ORNAMENT DIVIDER ──────────────────────────── */
+    .ornament-divider {
+      text-align: center; padding: 20px; color: var(--bronze); font-size: 18px; opacity: 0.4;
+    }
+
+    /* ─── SCROLL REVEAL CLASSES ─────────────────────── */
+    .reveal { opacity: 0; transform: translateY(40px); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); }
+    .reveal-right { opacity: 0; transform: translateX(40px); }
+    .reveal-scale { opacity: 0; transform: scale(0.95); }
+
+    /* ─── ANIMATIONS ────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">
+      <span class="nav-logo-main">POTUPA</span>
+      <span class="nav-logo-sub">Family Hotel Group</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#hotels">Готелі</a></li>
+      <li><a href="#story">Про нас</a></li>
+      <li><a href="#guide">Гід по Львову</a></li>
+      <li><a href="#reviews">Відгуки</a></li>
+      <li><a href="#" class="nav-book">Забронювати</a></li>
+    </ul>
+    <div class="lang">
+      <span class="active">UA</span>
+      <span class="sep">|</span>
+      <span>EN</span>
+      <span class="sep">|</span>
+      <span>PL</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow" id="heroEyebrow">Львів · 4 готелі · Центр міста</div>
+      <h1 class="hero-title">
+        <span><em id="heroLine1">Живіть</em></span>
+        <span><em id="heroLine2">всередині</em></span>
+        <span><em id="heroLine3">Львова</em></span>
+      </h1>
+      <p class="hero-sub" id="heroSub">
+        Чотири будинки з душею в самому серці міста
+      </p>
+      <div class="hero-ctas" id="heroCtas">
+        <a href="#hotels" class="btn btn-primary">Обрати готель</a>
+        <a href="#booking-bar" class="btn btn-outline">Забронювати</a>
+      </div>
+    </div>
+    <div class="hero-scroll" id="heroScroll">
+      <span>Гортати</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- BOOKING BAR -->
+  <div id="booking-bar">
+    <div class="booking-inner">
+      <div class="booking-field">
+        <label>Готель</label>
+        <select>
+          <option>Heritage · Зустрічна, 1</option>
+          <option>Opera · Шпитальна, 21</option>
+          <option>Garden · Зелена, 44а</option>
+          <option>Central · Ярослава Мудрого, 33</option>
+        </select>
+      </div>
+      <div class="booking-field">
+        <label>Заїзд</label>
+        <input type="date" />
+      </div>
+      <div class="booking-field">
+        <label>Виїзд</label>
+        <input type="date" />
+      </div>
+      <div class="booking-field">
+        <label>Гості</label>
+        <select>
+          <option>1 гість</option>
+          <option>2 гості</option>
+          <option>3 гості</option>
+          <option>4 гості</option>
+        </select>
+      </div>
+      <button class="booking-btn">Перевірити наявність →</button>
+    </div>
+  </div>
+
+  <!-- HOTELS -->
+  <section id="hotels">
+    <div class="hotels-header reveal">
+      <div class="section-label">Наші готелі</div>
+      <h2 class="section-title">Чотири будинки.<br><em>Один характер.</em></h2>
+    </div>
+    <div class="hotels-grid">
+
+      <a href="#" class="hotel-card reveal">
+        <div class="hotel-card-img">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="Potupa Heritage" loading="lazy" />
+          <span class="hotel-card-tag">★ Пам'ятка архітектури</span>
+        </div>
+        <div class="hotel-card-body">
+          <div class="hotel-card-name">Heritage</div>
+          <div class="hotel-card-addr">вул. Зустрічна, 1</div>
+          <div class="hotel-card-desc">Будинок 1890 року. Оригінальна ліпнина, авторський інтер'єр, товсті стіни, що пам'ятають усе.</div>
+          <div class="hotel-card-footer">
+            <div class="hotel-card-price">
+              <div class="from">від</div>
+              <span class="amount">€55</span>
+              <span class="night">/ніч</span>
+            </div>
+            <span class="hotel-card-link">Детальніше →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="hotel-card reveal">
+        <div class="hotel-card-img">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80" alt="Potupa Opera" loading="lazy" />
+          <span class="hotel-card-tag">🎭 5 хв від Опери</span>
+        </div>
+        <div class="hotel-card-body">
+          <div class="hotel-card-name">Opera</div>
+          <div class="hotel-card-addr">вул. Шпитальна, 21</div>
+          <div class="hotel-card-desc">Кроки від Краківського ринку і Оперного театру. Для тих, хто приїжджає не просто переночувати.</div>
+          <div class="hotel-card-footer">
+            <div class="hotel-card-price">
+              <div class="from">від</div>
+              <span class="amount">€50</span>
+              <span class="night">/ніч</span>
+            </div>
+            <span class="hotel-card-link">Детальніше →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="hotel-card reveal">
+        <div class="hotel-card-img">
+          <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600&q=80" alt="Potupa Garden" loading="lazy" />
+          <span class="hotel-card-tag">🌿 Тихий квартал</span>
+        </div>
+        <div class="hotel-card-body">
+          <div class="hotel-card-name">Garden</div>
+          <div class="hotel-card-addr">вул. Зелена, 44а</div>
+          <div class="hotel-card-desc">Спокійний район, оточений красивою австро-угорською архітектурою. 31 номер, панорамні вікна.</div>
+          <div class="hotel-card-footer">
+            <div class="hotel-card-price">
+              <div class="from">від</div>
+              <span class="amount">€45</span>
+              <span class="night">/ніч</span>
+            </div>
+            <span class="hotel-card-link">Детальніше →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="hotel-card reveal">
+        <div class="hotel-card-img">
+          <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80" alt="Potupa Central" loading="lazy" />
+          <span class="hotel-card-tag">📍 Ближній центр</span>
+        </div>
+        <div class="hotel-card-body">
+          <div class="hotel-card-name">Central</div>
+          <div class="hotel-card-addr">вул. Ярослава Мудрого, 33</div>
+          <div class="hotel-card-desc">Максимальна зручність — все поруч. Ідеально для бізнесу або насиченого дослідження міста.</div>
+          <div class="hotel-card-footer">
+            <div class="hotel-card-price">
+              <div class="from">від</div>
+              <span class="amount">€48</span>
+              <span class="night">/ніч</span>
+            </div>
+            <span class="hotel-card-link">Детальніше →</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div id="stats">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number" data-target="4" data-suffix="">4</div>
+        <div class="stat-label">готелі у Львові</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="92" data-suffix="">92</div>
+        <div class="stat-label">номери</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="10" data-suffix="+">10+</div>
+        <div class="stat-label">років досвіду</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="8" data-suffix=".7">8.7</div>
+        <div class="stat-label">рейтинг Booking.com</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRAND STORY -->
+  <section id="story">
+    <div class="story-img reveal-left">
+      <img src="https://images.unsplash.com/photo-1541427468627-a89a96e5ca1d?w=900&q=80" alt="Львів архітектура" />
+      <div class="story-img-overlay"></div>
+    </div>
+    <div class="story-content">
+      <div class="section-label">Наша історія</div>
+      <div class="story-ornament reveal"></div>
+      <h2 class="section-title reveal">Львів будували<br><em>на перетині культур</em></h2>
+      <div class="story-text reveal">
+        <p>Кожен камінь цього міста — нашарування епох. Австро-Угорщина залишила тут не просто будівлі — вона залишила спосіб жити: неспішно, красиво, з деталями.</p>
+        <p>Potupa — це чотири будинки, що пам'ятають усе. Ми не приховуємо вік — ми ним пишаємось. У нас не стерильно, але тут справжньо.</p>
+        <p>Розумна ціна. Центральне розташування. І той самий відчуття, коли розумієш: тут можна було б і залишитись.</p>
+      </div>
+      <a href="#" class="btn btn-outline reveal" style="align-self:flex-start">Більше про нас →</a>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section id="pillars">
+    <div class="hotels-header reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="section-label">Чому Potupa</div>
+      <h2 class="section-title">Три причини,<br><em>що вирішують</em></h2>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar reveal">
+        <div class="pillar-icon">⌖</div>
+        <div class="pillar-title">Центр</div>
+        <div class="pillar-text">Всі чотири готелі — пішохідна доступність до головних пам'яток. Жодного таксі, щоб потрапити до міста.</div>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-icon">⚜</div>
+        <div class="pillar-title">Спадщина</div>
+        <div class="pillar-text">Будинки 1890–1920-х років з автентичними фасадами, ліпниною та авторськими інтер'єрами. Живий музей щодня.</div>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-icon">◈</div>
+        <div class="pillar-title">Характер</div>
+        <div class="pillar-text">Жодних двох однакових готелів. Кожен об'єкт — окрема душа, окрема атмосфера, окрема причина повернутись.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="reviews">
+    <div class="reviews-header reveal">
+      <div class="section-label">Відгуки гостей</div>
+      <h2 class="section-title">Вони<br><em>вже були тут</em></h2>
+    </div>
+    <div class="reviews-track">
+      <div class="reviews-row" id="reviewsRow">
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Неймовірна атмосфера. Відчувається, що будинку 100 років, але все ідеально підтримується. Повернемось точно."</div>
+          <div class="review-author">Марта К., Варшава</div>
+          <div class="review-source">Booking.com · Серпень 2025</div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Все продумано до дрібниць. Персонал привітний, розташування — краще не придумаєш. Кав'ярні, ресторани — все поряд."</div>
+          <div class="review-author">Олексій Т., Київ</div>
+          <div class="review-source">Google · Жовтень 2025</div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★☆</div>
+          <div class="review-text">"Дуже гарне співвідношення ціни та якості. Домашня атмосфера, чисто, тихо. Для Львова — знахідка."</div>
+          <div class="review-author">Anna W., Kraków</div>
+          <div class="review-source">TripAdvisor · Грудень 2025</div>
+        </div>
+      </div>
+    </div>
+    <div class="reviews-nav">
+      <div class="reviews-dot active"></div>
+      <div class="reviews-dot"></div>
+      <div class="reviews-dot"></div>
+    </div>
+  </section>
+
+  <!-- LVIV GUIDE -->
+  <section id="guide">
+    <div class="guide-header">
+      <div>
+        <div class="section-label reveal">Гід по Львову</div>
+        <h2 class="section-title reveal">Ваш Львів<br><em>починається тут</em></h2>
+      </div>
+      <a href="#" class="btn btn-dark reveal">Всі матеріали →</a>
+    </div>
+    <div class="guide-grid">
+      <div class="guide-card reveal">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80" alt="Кав'ярні Львова" loading="lazy" />
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-tag">Кава</div>
+          <div class="guide-title">5 кав'ярень поруч із Heritage</div>
+          <div class="guide-desc">Від ранкового еспресо до авторських купажів — наш список найкращих кав'ярень у пішохідній доступності.</div>
+        </div>
+      </div>
+      <div class="guide-card reveal">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80" alt="Маршрут Львовом" loading="lazy" />
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-tag">Маршрути</div>
+          <div class="guide-title">Маршрут від Opera пішки</div>
+          <div class="guide-desc">Оперний театр → Ринкова площа → Підзамче → Стрийський парк. 4 години без поспіху.</div>
+        </div>
+      </div>
+      <div class="guide-card reveal">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt="Ресторани Львова" loading="lazy" />
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-tag">Їжа</div>
+          <div class="guide-title">Де їсти: вибір команди</div>
+          <div class="guide-desc">Не типовий топ-10 з Tripadvisor. Місця, куди ми водимо друзів: від борщу до фьюжн-кухні.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <!-- SVG Lviv Rooftops -->
+    <svg class="footer-svg" viewBox="0 0 1400 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path id="rooftopPath" d="M0,100 L0,80 L40,80 L40,60 L60,60 L60,40 L80,40 L80,20 L100,20 L100,0 L120,0 L120,20 L140,20 L140,40 L160,40 L160,55 L180,55 L180,35 L200,35 L210,20 L220,35 L240,35 L240,55 L260,55 L260,70 L280,70 L280,50 L300,50 L300,30 L320,30 L320,10 L340,10 L340,30 L360,30 L360,50 L380,50 L380,65 L410,65 L410,45 L430,30 L450,45 L450,65 L480,65 L480,80 L500,80 L500,60 L520,60 L520,40 L540,40 L540,55 L560,55 L560,70 L580,70 L580,50 L600,50 L620,30 L640,50 L640,70 L660,70 L660,55 L680,55 L680,35 L700,35 L700,20 L720,20 L720,35 L740,35 L740,55 L760,55 L760,70 L790,70 L790,50 L820,50 L820,30 L840,30 L840,50 L860,50 L870,65 L880,50 L900,50 L900,70 L920,70 L920,55 L940,55 L950,40 L960,55 L980,55 L980,70 L1000,70 L1000,55 L1020,55 L1020,35 L1040,35 L1050,18 L1060,35 L1080,35 L1080,55 L1100,55 L1100,70 L1120,70 L1120,50 L1140,50 L1150,30 L1160,50 L1180,50 L1180,65 L1200,65 L1200,80 L1220,80 L1220,60 L1240,60 L1240,40 L1260,40 L1260,60 L1280,60 L1280,80 L1300,80 L1300,65 L1320,65 L1340,80 L1360,80 L1400,80 L1400,100 Z" fill="white" stroke="white" stroke-width="0"/>
+    </svg>
+
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo-text">POTUPA</div>
+        <div class="footer-logo-sub">Family Hotel Group</div>
+        <p class="footer-tagline">Чотири будинки з душею в самому серці Львова. Живіть всередині міста.</p>
+        <div class="footer-socials">
+          <a class="social-btn" href="#" title="Instagram">IG</a>
+          <a class="social-btn" href="#" title="Facebook">FB</a>
+          <a class="social-btn" href="#" title="TikTok">TK</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Готелі</h4>
+        <ul>
+          <li><a href="#">Heritage · Зустрічна, 1</a></li>
+          <li><a href="#">Opera · Шпитальна, 21</a></li>
+          <li><a href="#">Garden · Зелена, 44а</a></li>
+          <li><a href="#">Central · Мудрого, 33</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Компанія</h4>
+        <ul>
+          <li><a href="#">Про нас</a></li>
+          <li><a href="#">Гід по Львову</a></li>
+          <li><a href="#">Відгуки</a></li>
+          <li><a href="#">Для бізнесу</a></li>
+          <li><a href="#">Вакансії</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Контакти</h4>
+        <div class="footer-contact">
+          <p><a href="tel:+380321234567">+38 032 123 45 67</a></p>
+          <p><a href="mailto:info@potupa-hotel.com">info@potupa-hotel.com</a></p>
+          <br/>
+          <p>Львів, Україна</p>
+          <br/>
+          <p>Пряме бронювання:</p>
+          <p><a href="#booking-bar">potupa-hotel.com/book</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Potupa Family Hotel Group. Всі права захищено.</span>
+      <div style="display:flex;gap:24px;">
+        <a href="#">Конфіденційність</a>
+        <a href="#">Умови використання</a>
+        <a href="#">Карта сайту</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── CURSOR ────────────────────────────────────────
+    const dot  = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      gsap.to(dot,  { x: mx, y: my, duration: 0.1 });
+      gsap.to(ring, { x: mx, y: my, duration: 0.45, ease: 'power3.out' });
+    });
+
+    document.querySelectorAll('.hotel-card, .btn, .nav-book, .guide-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        gsap.to(ring, { scale: 1.8, borderColor: '#A8844A', duration: 0.3 });
+        gsap.to(dot,  { scale: 0,   duration: 0.2 });
+      });
+      el.addEventListener('mouseleave', () => {
+        gsap.to(ring, { scale: 1, borderColor: '#B85C42', duration: 0.3 });
+        gsap.to(dot,  { scale: 1, duration: 0.2 });
+      });
+    });
+
+    // ── NAVBAR scroll ──────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 80);
+    });
+
+    // ── HERO ANIMATION ─────────────────────────────────
+    const heroTl = gsap.timeline({ delay: 0.3 });
+    heroTl
+      .from('#heroBg', { scale: 1.08, duration: 2.2, ease: 'power2.out' })
+      .from('#heroEyebrow', { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' }, '-=1.6')
+      .to('#heroLine1', { y: '0%', duration: 0.7, ease: 'power3.out' }, '-=1.2')
+      .to('#heroLine2', { y: '0%', duration: 0.7, ease: 'power3.out' }, '-=0.55')
+      .to('#heroLine3', { y: '0%', duration: 0.7, ease: 'power3.out' }, '-=0.55')
+      .from('#heroSub',  { opacity: 0, y: 20, duration: 0.5 }, '-=0.3')
+      .from('#heroCtas', { opacity: 0, y: 16, duration: 0.5 }, '-=0.25')
+      .from('#heroScroll', { opacity: 0, y: 10, duration: 0.5 }, '-=0.1');
+
+    // ── SCROLL REVEALS ─────────────────────────────────
+    gsap.utils.toArray('.reveal').forEach((el, i) => {
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' },
+        opacity: 0, y: 50, duration: 0.75, ease: 'power3.out',
+        delay: (el.closest('.hotels-grid') || el.closest('.pillars-grid') || el.closest('.guide-grid') || el.closest('.reviews-row'))
+          ? (Array.from(el.parentElement.children).indexOf(el)) * 0.12
+          : 0
+      });
+    });
+
+    gsap.utils.toArray('.reveal-left').forEach(el => {
+      gsap.from(el, {
+        scrollTrigger: { trigger: el, start: 'top 80%', toggleActions: 'play none none reverse' },
+        opacity: 0, x: -60, duration: 0.9, ease: 'power3.out'
+      });
+    });
+
+    // ── HERO PARALLAX ──────────────────────────────────
+    gsap.to('#heroBg', {
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
+      y: 120, ease: 'none'
+    });
+
+    // ── STORY TEXT PARALLAX ────────────────────────────
+    gsap.to('.story-img img', {
+      scrollTrigger: { trigger: '#story', start: 'top bottom', end: 'bottom top', scrub: 1.5 },
+      y: -60, ease: 'none'
+    });
+
+    // ── FOOTER SVG DRAW (simulated) ────────────────────
+    const path = document.getElementById('rooftopPath');
+    if (path) {
+      const len = path.getTotalLength ? path.getTotalLength() : 3000;
+      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len, stroke: 'white', strokeWidth: 1, fill: 'none' });
+      gsap.to(path, {
+        scrollTrigger: { trigger: 'footer', start: 'top 85%' },
+        strokeDashoffset: 0, duration: 3, ease: 'power2.inOut',
+        onComplete: () => { gsap.to(path, { fill: 'white', duration: 0.6 }); }
+      });
+    }
+
+    // ── STAT COUNTERS ──────────────────────────────────
+    document.querySelectorAll('.stat-number').forEach(el => {
+      const raw    = el.textContent.trim();
+      const suffix = el.dataset.suffix || '';
+      const target = parseFloat(el.dataset.target);
+      const isFloat = String(target).includes('.');
+
+      gsap.from({ val: 0 }, {
+        scrollTrigger: { trigger: '#stats', start: 'top 80%' },
+        val: target, duration: 1.8, ease: 'power2.out',
+        onUpdate() {
+          const v = this.targets()[0].val;
+          el.textContent = isFloat ? v.toFixed(1) + suffix : Math.round(v) + suffix;
+        }
+      });
+    });
+
+    // ── BOOKING BAR INPUT ANIMATION ────────────────────
+    document.querySelectorAll('.booking-field').forEach(field => {
+      field.addEventListener('click', () => {
+        gsap.to(field, { borderBottomColor: '#B85C42', duration: 0.2 });
+      });
+    });
+
+    // ── REVIEWS AUTOPLAY ───────────────────────────────
+    const dots = document.querySelectorAll('.reviews-dot');
+    let current = 0;
+    setInterval(() => {
+      dots[current].classList.remove('active');
+      current = (current + 1) % dots.length;
+      dots[current].classList.add('active');
+    }, 4000);
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        dots[current].classList.remove('active');
+        current = i;
+        dot.classList.add('active');
+      });
+    });
+
+    // ── SMOOTH SCROLL for anchor links ────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (href.length > 1) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>
