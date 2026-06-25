@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Potupa Family Hotel Group — Львів</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white:  #FFFFFF;
+      --bg:     #F7F5F2;
+      --bg2:    #EFECE7;
+      --text:   #1C1917;
+      --muted:  #78716C;
+      --border: #E2DDD8;
+      --accent: #B05A3C;
+      --bronze: #8A6A4A;
+      --dark:   #1C1917;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    img { display: block; width: 100%; }
+    a { color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* NAV */
+    .nav { position: fixed; top:0; left:0; right:0; z-index:200; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color .3s; }
+    .nav.scrolled { border-color: var(--border); }
+    .nav-inner { max-width:1320px; margin:0 auto; padding:0 20px; height:60px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .nav-logo { text-decoration:none; display:flex; flex-direction:column; gap:1px; flex-shrink:0; }
+    .nav-logo-main { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; letter-spacing:.14em; color:var(--text); line-height:1; }
+    .nav-logo-sub { font-size:8px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); line-height:1; }
+    .nav-links { display:none; gap:28px; list-style:none; align-items:center; }
+    @media(min-width:768px){ .nav-links { display:flex; } }
+    .nav-links a { text-decoration:none; font-size:12px; font-weight:500; letter-spacing:.05em; color:var(--muted); transition:color .2s; }
+    .nav-links a:hover { color:var(--text); }
+    .nav-book { display:none; background:var(--accent); color:white; border:none; padding:9px 20px; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; border-radius:2px; transition:background .2s; white-space:nowrap; }
+    @media(min-width:768px){ .nav-book { display:block; } }
+    .nav-book:hover { background:#8e3f2a; }
+    .burger { display:flex; flex-direction:column; gap:5px; background:none; border:none; padding:4px; }
+    @media(min-width:768px){ .burger { display:none; } }
+    .burger span { display:block; width:22px; height:1.5px; background:var(--text); transition:all .3s; }
+    .burger.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+    .burger.open span:nth-child(2){ opacity:0; }
+    .burger.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+    .mobile-menu { position:fixed; top:60px; left:0; right:0; bottom:0; background:white; z-index:190; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:6px; transform:translateX(100%); transition:transform .35s cubic-bezier(.16,1,.3,1); }
+    .mobile-menu.open { transform:none; }
+    .mobile-menu a { text-decoration:none; font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:400; letter-spacing:.04em; color:var(--text); padding:10px 20px; transition:color .2s; }
+    .mobile-menu a:hover { color:var(--accent); }
+    .mobile-menu .m-cta { margin-top:16px; background:var(--accent); color:white !important; font-size:12px !important; font-family:'Inter',sans-serif !important; font-weight:600 !important; letter-spacing:.12em !important; text-transform:uppercase !important; padding:14px 36px !important; border-radius:2px; }
+
+    /* HERO */
+    .hero { height:100svh; min-height:600px; position:relative; overflow:hidden; }
+    .hero-bg { position:absolute; inset:0; }
+    .hero-bg img { width:100%; height:100%; object-fit:cover; object-position:center 60%; }
+    .hero-ov { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(28,25,23,.12) 0%, rgba(28,25,23,.04) 35%, rgba(28,25,23,.6) 100%); }
+    .hero-cnt { position:absolute; bottom:0; left:0; right:0; padding:36px 20px 44px; color:white; }
+    @media(min-width:768px){ .hero-cnt { padding:60px 60px 68px; max-width:800px; } }
+    .hero-eye { font-size:10px; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:14px; opacity:0; }
+    .hero-h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(46px,9vw,94px); font-weight:300; line-height:1; letter-spacing:-.02em; margin-bottom:18px; }
+    .hero-h1 span { display:block; overflow:hidden; }
+    .hero-h1 span > em { display:block; font-style:italic; transform:translateY(100%); }
+    .hero-sub { font-size:14px; font-weight:300; line-height:1.65; color:rgba(255,255,255,.7); margin-bottom:28px; opacity:0; max-width:400px; }
+    .hero-ctas { display:flex; gap:10px; flex-wrap:wrap; opacity:0; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 24px; font-size:12px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; border-radius:2px; border:none; transition:all .25s; cursor:pointer; }
+    .btn-wh { background:white; color:var(--text); }
+    .btn-wh:hover { background:var(--bg); }
+    .btn-gh { border:1px solid rgba(255,255,255,.45); color:white; }
+    .btn-gh:hover { background:rgba(255,255,255,.1); border-color:white; }
+    .btn-acc { background:var(--accent); color:white; }
+    .btn-acc:hover { background:#8e3f2a; }
+    .btn-od { border:1px solid var(--border); color:var(--text); background:transparent; }
+    .btn-od:hover { background:var(--bg); }
+    .hero-scroll { position:absolute; bottom:20px; right:20px; display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.4); font-size:9px; letter-spacing:.22em; text-transform:uppercase; opacity:0; }
+    @media(min-width:768px){ .hero-scroll { right:56px; } }
+    .h-track { width:36px; height:1px; background:rgba(255,255,255,.2); position:relative; overflow:hidden; }
+    .h-track::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:white; animation:tr 2s ease-in-out infinite; }
+    @keyframes tr { 0%{left:-100%} 100%{left:100%} }
+
+    /* STATS STRIP */
+    .stats { background:var(--bg); border-bottom:1px solid var(--border); padding:32px 20px; }
+    .stats-in { max-width:1320px; margin:0 auto; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:32px; text-align:center; }
+    .stat-n { font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:500; color:var(--text); line-height:1; display:block; }
+    .stat-l { font-size:9px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin-top:3px; display:block; }
+    .stat-sep { width:1px; height:36px; background:var(--border); display:none; }
+    @media(min-width:560px){ .stat-sep { display:block; } }
+
+    /* BOOKING STRIP */
+    .bstrip { background:var(--dark); position:sticky; top:60px; z-index:100; }
+    .bstrip-in { max-width:1320px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; }
+    @media(min-width:640px){ .bstrip-in { grid-template-columns:2fr 1fr 1fr auto; } }
+    .bf { border-right:1px solid rgba(255,255,255,.07); padding:12px 18px; display:flex; flex-direction:column; gap:3px; }
+    .bf:last-of-type { border:none; }
+    .bf label { font-size:8px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+    .bf select, .bf input { background:none; border:none; outline:none; font-family:'Inter',sans-serif; font-size:13px; color:white; width:100%; }
+    .bf select option { background:#1C1917; }
+    .bsub { background:var(--accent); color:white; border:none; padding:0 24px; font-size:10px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; transition:background .2s; white-space:nowrap; grid-column:1/-1; padding:14px; margin:8px 12px; border-radius:2px; }
+    @media(min-width:640px){ .bsub { grid-column:auto; margin:8px; padding:0 24px; } }
+    .bsub:hover { background:#8e3f2a; }
+
+    /* SECTION COMMON */
+    .sec { padding:72px 20px; }
+    @media(min-width:768px){ .sec { padding:96px 60px; } }
+    .cont { max-width:1320px; margin:0 auto; }
+    .lbl { font-size:9px; font-weight:700; letter-spacing:.32em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+    .h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(30px,5vw,54px); font-weight:400; line-height:1.06; letter-spacing:-.01em; color:var(--text); }
+    .h2 em { font-style:italic; color:var(--accent); }
+    .lead { font-size:15px; font-weight:300; line-height:1.75; color:var(--muted); margin-top:16px; }
+
+    /* HOTELS */
+    .hotels-hd { display:flex; flex-direction:column; gap:16px; margin-bottom:48px; }
+    @media(min-width:768px){ .hotels-hd { flex-direction:row; align-items:flex-end; justify-content:space-between; gap:40px; } }
+    .hotels-grid { display:grid; grid-template-columns:1fr; gap:2px; }
+    @media(min-width:600px){ .hotels-grid { grid-template-columns:1fr 1fr; } }
+    .hi { position:relative; overflow:hidden; text-decoration:none; color:inherit; background:var(--bg); display:block; }
+    .hi-img { aspect-ratio:4/3; overflow:hidden; position:relative; }
+    .hi-img img { width:100%; height:100%; object-fit:cover; transition:transform .75s cubic-bezier(.16,1,.3,1); }
+    .hi:hover .hi-img img { transform:scale(1.05); }
+    .hi-tag { position:absolute; top:14px; left:14px; background:white; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:5px 11px; box-shadow:0 2px 8px rgba(0,0,0,.1); }
+    .hi-body { padding:24px 24px 28px; }
+    .hi-num { font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+    .hi-name { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:500; margin-bottom:5px; line-height:1.1; }
+    .hi-addr { font-size:11px; color:var(--bronze); font-weight:500; letter-spacing:.03em; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+    .hi-addr::before { content:''; width:18px; height:1px; background:var(--bronze); flex-shrink:0; }
+    .hi-desc { font-size:13px; line-height:1.7; color:var(--muted); margin-bottom:18px; }
+    .hi-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+    .ftag { font-size:9px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:4px 9px; border:1px solid var(--border); color:var(--muted); border-radius:2px; }
+    .hi-foot { display:flex; align-items:center; justify-content:space-between; padding-top:18px; border-top:1px solid var(--border); }
+    .price-f { font-size:9px; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; }
+    .price-a { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:500; color:var(--text); }
+    .price-n { font-size:11px; color:var(--muted); }
+    .hi-cta { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:5px; border-bottom:1px solid var(--accent); padding-bottom:1px; transition:gap .3s; }
+    .hi:hover .hi-cta { gap:11px; }
+
+    /* FEATURES */
+    .feat-sec { background:var(--dark); padding:52px 20px; }
+    @media(min-width:768px){ .feat-sec { padding:52px 60px; } }
+    .feat-grid { max-width:1320px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+    @media(min-width:900px){ .feat-grid { grid-template-columns:repeat(4,1fr); } }
+    .fi { display:flex; flex-direction:column; gap:10px; }
+    .fi-ico { width:38px; height:38px; border:1px solid rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font-size:15px; color:rgba(255,255,255,.5); transition:all .3s; }
+    .fi:hover .fi-ico { border-color:var(--accent); color:var(--accent); }
+    .fi-t { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:500; color:white; }
+    .fi-d { font-size:12px; line-height:1.7; color:rgba(255,255,255,.38); }
+
+    /* GALLERY */
+    .gallery { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+    @media(min-width:768px){ .gallery { grid-template-columns:repeat(5,1fr); } }
+    .gi { overflow:hidden; aspect-ratio:1; }
+    .gi:first-child { grid-column:span 2; aspect-ratio:2/1; }
+    @media(min-width:768px){ .gi:first-child { grid-column:span 2; aspect-ratio:2/1; } }
+    .gi img { width:100%; height:100%; object-fit:cover; transition:transform .6s ease; }
+    .gi:hover img { transform:scale(1.04); }
+
+    /* ABOUT */
+    .about-sec { background:var(--bg); }
+    .about-grid { display:grid; grid-template-columns:1fr; gap:40px; }
+    @media(min-width:900px){ .about-grid { grid-template-columns:1fr 1fr; gap:72px; align-items:center; } }
+    .ab-img { position:relative; }
+    .ab-img img { width:100%; aspect-ratio:4/3; object-fit:cover; }
+    @media(min-width:900px){ .ab-img img { aspect-ratio:3/4; } }
+    .ab-cap { position:absolute; bottom:14px; right:14px; background:white; padding:10px 14px; font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+    .ab-div { width:44px; height:1px; background:var(--accent); margin:24px 0; }
+    .ab-txt { font-size:14px; line-height:1.85; color:var(--muted); }
+    .ab-txt p+p { margin-top:14px; }
+
+    /* REVIEWS */
+    .rv-hd { display:flex; flex-direction:column; gap:16px; margin-bottom:44px; }
+    @media(min-width:768px){ .rv-hd { flex-direction:row; align-items:flex-end; justify-content:space-between; } }
+    .rv-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+    @media(min-width:600px){ .rv-grid { grid-template-columns:1fr 1fr; } }
+    @media(min-width:900px){ .rv-grid { grid-template-columns:repeat(3,1fr); } }
+    .rc { padding:28px; background:var(--bg); display:flex; flex-direction:column; gap:14px; transition:transform .3s,box-shadow .3s; }
+    .rc:hover { transform:translateY(-4px); box-shadow:0 10px 36px rgba(0,0,0,.06); }
+    .rc-stars { color:var(--accent); font-size:11px; letter-spacing:2px; }
+    .rc-txt { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; line-height:1.6; color:var(--text); flex:1; }
+    .rc-au { font-size:11px; font-weight:600; letter-spacing:.08em; color:var(--muted); }
+    .rc-src { font-size:10px; color:var(--border); }
+
+    /* CONTACT */
+    .ct-sec { background:var(--bg); }
+    .ct-grid { display:grid; grid-template-columns:1fr; gap:44px; }
+    @media(min-width:900px){ .ct-grid { grid-template-columns:1fr 1fr; gap:72px; } }
+    .ct-items { display:flex; flex-direction:column; gap:28px; margin-top:28px; }
+    .ct-lbl { font-size:9px; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--accent); margin-bottom:5px; }
+    .ct-val { font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--text); text-decoration:none; transition:color .2s; }
+    .ct-val:hover { color:var(--accent); }
+    .ct-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+    .hlist { margin-top:6px; }
+    .hli { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); text-decoration:none; color:inherit; }
+    .hli:last-child { border:none; }
+    .hli-n { font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--muted); width:22px; flex-shrink:0; }
+    .hli-i { flex:1; }
+    .hli-nm { font-size:13px; font-weight:600; }
+    .hli-ad { font-size:11px; color:var(--muted); margin-top:1px; }
+    .hli-ar { font-size:13px; color:var(--muted); transition:transform .2s,color .2s; }
+    .hli:hover .hli-ar { transform:translateX(4px); color:var(--accent); }
+    .map-wrap { border:1px solid var(--border); overflow:hidden; }
+    .map-wrap iframe { width:100%; height:320px; border:none; display:block; }
+    @media(min-width:900px){ .map-wrap iframe { height:440px; } }
+
+    /* FOOTER */
+    footer { background:var(--dark); color:white; padding:56px 20px 28px; }
+    @media(min-width:768px){ footer { padding:72px 60px 36px; } }
+    .ft-top { max-width:1320px; margin:0 auto; display:grid; grid-template-columns:1fr; gap:40px; margin-bottom:48px; }
+    @media(min-width:600px){ .ft-top { grid-template-columns:1fr 1fr; } }
+    @media(min-width:900px){ .ft-top { grid-template-columns:2fr 1fr 1fr; } }
+    .ft-logo { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500; letter-spacing:.12em; color:white; }
+    .ft-sub { font-size:8px; letter-spacing:.25em; text-transform:uppercase; color:rgba(255,255,255,.28); margin-bottom:16px; }
+    .ft-desc { font-size:13px; line-height:1.75; color:rgba(255,255,255,.38); max-width:260px; margin-bottom:24px; }
+    .ft-soc { display:flex; gap:10px; }
+    .soc { width:34px; height:34px; border:1px solid rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:rgba(255,255,255,.35); text-decoration:none; transition:all .25s; }
+    .soc:hover { border-color:var(--accent); color:var(--accent); }
+    .ft-col h4 { font-size:8px; font-weight:700; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.28); margin-bottom:16px; }
+    .ft-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .ft-col ul a { text-decoration:none; font-size:12px; color:rgba(255,255,255,.42); transition:color .2s; }
+    .ft-col ul a:hover { color:white; }
+    .ft-bot { max-width:1320px; margin:0 auto; padding-top:24px; border-top:1px solid rgba(255,255,255,.06); display:flex; flex-direction:column; gap:10px; font-size:11px; color:rgba(255,255,255,.22); }
+    @media(min-width:600px){ .ft-bot { flex-direction:row; justify-content:space-between; align-items:center; } }
+    .ft-bot a { color:rgba(255,255,255,.28); text-decoration:none; transition:color .2s; }
+    .ft-bot a:hover { color:rgba(255,255,255,.7); }
+
+    /* ANIMATIONS */
+    .au { opacity:0; transform:translateY(28px); }
+    .af { opacity:0; }
+    .al { opacity:0; transform:translateX(-28px); }
+    .done { opacity:1 !important; transform:none !important; transition:opacity .65s ease, transform .65s ease; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo">
+      <span class="nav-logo-main">POTUPA</span>
+      <span class="nav-logo-sub">Family Hotel Group</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#hotels">Готелі</a></li>
+      <li><a href="#about">Про нас</a></li>
+      <li><a href="#reviews">Відгуки</a></li>
+      <li><a href="#contact">Контакти</a></li>
+    </ul>
+    <button class="nav-book" onclick="document.getElementById('bstrip').scrollIntoView({behavior:'smooth'})">Забронювати</button>
+    <button class="burger" id="brg"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mmenu">
+  <a href="#hotels" onclick="cm()">Готелі</a>
+  <a href="#about"  onclick="cm()">Про нас</a>
+  <a href="#reviews" onclick="cm()">Відгуки</a>
+  <a href="#contact" onclick="cm()">Контакти</a>
+  <a href="#bstrip" class="m-cta" onclick="cm()">Забронювати</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1800&q=85" alt="Львів" fetchpriority="high"/>
+  </div>
+  <div class="hero-ov"></div>
+  <div class="hero-cnt">
+    <p class="hero-eye" id="he">Львів · Центр міста · 4 готелі</p>
+    <h1 class="hero-h1">
+      <span><em id="ht1">Живіть</em></span>
+      <span><em id="ht2">всередині</em></span>
+      <span><em id="ht3">Львова</em></span>
+    </h1>
+    <p class="hero-sub" id="hs">Чотири будинки початку XX ст. в самому серці міста</p>
+    <div class="hero-ctas" id="hb">
+      <a href="#hotels" class="btn btn-wh">Обрати готель</a>
+      <a href="#bstrip" class="btn btn-gh">Забронювати</a>
+    </div>
+  </div>
+  <div class="hero-scroll" id="hsc"><div class="h-track"></div><span>гортати</span></div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-in">
+    <div class="au"><span class="stat-n">4</span><span class="stat-l">Готелі</span></div>
+    <div class="stat-sep"></div>
+    <div class="au"><span class="stat-n">92</span><span class="stat-l">Номери</span></div>
+    <div class="stat-sep"></div>
+    <div class="au"><span class="stat-n">8.7</span><span class="stat-l">Booking.com</span></div>
+    <div class="stat-sep"></div>
+    <div class="au"><span class="stat-n">10+</span><span class="stat-l">Років</span></div>
+  </div>
+</div>
+
+<!-- BOOKING -->
+<div class="bstrip" id="bstrip">
+  <div class="bstrip-in">
+    <div class="bf"><label>Готель</label>
+      <select><option>Heritage — Зустрічна, 1</option><option>Opera — Шпитальна, 21</option><option>Garden — Зелена, 44а</option><option>Central — Мудрого, 33</option></select>
+    </div>
+    <div class="bf"><label>Заїзд</label><input type="date"/></div>
+    <div class="bf"><label>Виїзд</label><input type="date"/></div>
+    <button class="bsub">Перевірити →</button>
+  </div>
+</div>
+
+<!-- HOTELS -->
+<section class="sec" id="hotels" style="background:var(--white)">
+  <div class="cont">
+    <div class="hotels-hd">
+      <div>
+        <div class="lbl au">Наші готелі</div>
+        <h2 class="h2 au">Чотири будинки.<br><em>Один характер.</em></h2>
+      </div>
+      <p class="lead au" style="margin-top:0;max-width:360px;">Всі готелі — пішохідна доступність до головних пам'яток Львова.</p>
+    </div>
+  </div>
+  <div class="hotels-grid">
+
+    <a href="#contact" class="hi au">
+      <div class="hi-img">
+        <img src="https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=900&q=80" alt="Heritage" loading="lazy"/>
+        <span class="hi-tag">★ Пам'ятка архітектури</span>
+      </div>
+      <div class="hi-body">
+        <div class="hi-num">01 — Heritage</div>
+        <div class="hi-name">Potupa Heritage</div>
+        <div class="hi-addr">вул. Зустрічна, 1</div>
+        <p class="hi-desc">Будинок 1890 р. — пам'ятка архітектури доби Австро-Угорщини. Оригінальна ліпнина, авторський інтер'єр з темою велосипедного руху. 28 номерів.</p>
+        <div class="hi-tags"><span class="ftag">28 номерів</span><span class="ftag">1890 рік</span><span class="ftag">Авт. інтер'єр</span><span class="ftag">Wi-Fi</span></div>
+        <div class="hi-foot">
+          <div><div class="price-f">від</div><span class="price-a">€55</span><span class="price-n">/ніч</span></div>
+          <span class="hi-cta">Забронювати →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="#contact" class="hi au">
+      <div class="hi-img">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80" alt="Opera" loading="lazy"/>
+        <span class="hi-tag">🎭 5 хв від Оперного</span>
+      </div>
+      <div class="hi-body">
+        <div class="hi-num">02 — Opera</div>
+        <div class="hi-name">Potupa Opera</div>
+        <div class="hi-addr">вул. Шпитальна, 21</div>
+        <p class="hi-desc">Кілька хвилин від Краківського ринку та Оперного театру. Класичний інтер'єр з вітражами та ліпниною. 18 номерів у самому серці туристичного Львова.</p>
+        <div class="hi-tags"><span class="ftag">18 номерів</span><span class="ftag">Вітражі</span><span class="ftag">Краківський ринок</span><span class="ftag">Wi-Fi</span></div>
+        <div class="hi-foot">
+          <div><div class="price-f">від</div><span class="price-a">€50</span><span class="price-n">/ніч</span></div>
+          <span class="hi-cta">Забронювати →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="#contact" class="hi au">
+      <div class="hi-img">
+        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=900&q=80" alt="Garden" loading="lazy"/>
+        <span class="hi-tag">🌿 Тихий квартал</span>
+      </div>
+      <div class="hi-body">
+        <div class="hi-num">03 — Garden</div>
+        <div class="hi-name">Potupa Garden</div>
+        <div class="hi-addr">вул. Зелена, 44а</div>
+        <p class="hi-desc">Спокійний район з красивою архітектурою початку XX ст. 31 простором номер з панорамними вікнами. Ідеально для тих, хто шукає тишу в центрі.</p>
+        <div class="hi-tags"><span class="ftag">31 номер</span><span class="ftag">Тиха вулиця</span><span class="ftag">Паркінг поруч</span><span class="ftag">Wi-Fi</span></div>
+        <div class="hi-foot">
+          <div><div class="price-f">від</div><span class="price-a">€45</span><span class="price-n">/ніч</span></div>
+          <span class="hi-cta">Забронювати →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="#contact" class="hi au">
+      <div class="hi-img">
+        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=900&q=80" alt="Central" loading="lazy"/>
+        <span class="hi-tag">📍 Ближній центр</span>
+      </div>
+      <div class="hi-body">
+        <div class="hi-num">04 — Central</div>
+        <div class="hi-name">Potupa Central</div>
+        <div class="hi-addr">вул. Ярослава Мудрого, 33</div>
+        <p class="hi-desc">Затишний класичний інтер'єр з вітражами та ліпниною у ближньому центрі. 15 продуманих номерів — ідеально для бізнес-поїздок.</p>
+        <div class="hi-tags"><span class="ftag">15 номерів</span><span class="ftag">Вітражі</span><span class="ftag">Бізнес</span><span class="ftag">Wi-Fi</span></div>
+        <div class="hi-foot">
+          <div><div class="price-f">від</div><span class="price-a">€48</span><span class="price-n">/ніч</span></div>
+          <span class="hi-cta">Забронювати →</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<div class="feat-sec">
+  <div class="feat-grid">
+    <div class="fi au"><div class="fi-ico">⌖</div><div class="fi-t">Центр міста</div><div class="fi-d">Всі 4 готелі — пішохідна доступність до площі Ринок та Оперного.</div></div>
+    <div class="fi au"><div class="fi-ico">⚜</div><div class="fi-t">Спадщина</div><div class="fi-d">Будинки 1890–1920 рр. з оригінальними фасадами, вітражами і ліпниною.</div></div>
+    <div class="fi au"><div class="fi-ico">◈</div><div class="fi-t">Характер</div><div class="fi-d">Жодних двох однакових. Кожен готель — авторський інтер'єр і своя душа.</div></div>
+    <div class="fi au"><div class="fi-ico">✦</div><div class="fi-t">Чесна ціна</div><div class="fi-d">Розумна цінова політика без зайвих націнок. Якість і комфорт за прозорою ціною.</div></div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery">
+  <div class="gi"><img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1200&q=80" alt="" loading="lazy"/></div>
+  <div class="gi"><img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80" alt="" loading="lazy"/></div>
+  <div class="gi"><img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80" alt="" loading="lazy"/></div>
+  <div class="gi"><img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?w=600&q=80" alt="" loading="lazy"/></div>
+  <div class="gi"><img src="https://images.unsplash.com/photo-1541971297127-c4e6a5a6ac5d?w=600&q=80" alt="" loading="lazy"/></div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec about-sec" id="about">
+  <div class="cont">
+    <div class="about-grid">
+      <div class="ab-img al">
+        <img src="https://images.unsplash.com/photo-1541427468627-a89a96e5ca1d?w=900&q=80" alt="Австро-угорська архітектура Львова" loading="lazy"/>
+        <div class="ab-cap">Львів · 1890–1920</div>
+      </div>
+      <div>
+        <div class="lbl au">Наша історія</div>
+        <h2 class="h2 au">Місто, що<br><em>пам'ятає все</em></h2>
+        <div class="ab-div au"></div>
+        <div class="ab-txt au">
+          <p>Львів будували на перетині культур. Австро-Угорщина залишила тут не просто будівлі — вона залишила спосіб жити: неспішно, з деталями, з характером.</p>
+          <p>Potupa — це чотири будинки початку XX ст. у центральних кварталах міста. Кожен — окрема історія і архітектурний почерк. Ми не приховуємо вік — ми ним пишаємось.</p>
+          <p>Розумна ціна. Центр. І те відчуття, коли розумієш: тут можна було б і залишитись.</p>
+        </div>
+        <div style="margin-top:28px" class="au"><a href="#contact" class="btn btn-acc">Зв'язатися →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec" id="reviews" style="background:var(--white)">
+  <div class="cont">
+    <div class="rv-hd">
+      <div>
+        <div class="lbl au">Відгуки гостей</div>
+        <h2 class="h2 au">Вони вже<br><em>були тут</em></h2>
+      </div>
+      <div class="au" style="display:flex;align-items:center;gap:20px;">
+        <div style="text-align:center"><div style="font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:500;line-height:1">8.7</div><div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:3px">Booking.com</div></div>
+        <div style="width:1px;height:44px;background:var(--border)"></div>
+        <div style="text-align:center"><div style="font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:500;line-height:1">4.6</div><div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:3px">Google</div></div>
+      </div>
+    </div>
+    <div class="rv-grid">
+      <div class="rc au"><div class="rc-stars">★★★★★</div><div class="rc-txt">"Неймовірна атмосфера. Відчувається, що будинку 100 років, але все ідеально підтримується."</div><div><div class="rc-au">Марта К. — Варшава</div><div class="rc-src">Heritage · Booking.com</div></div></div>
+      <div class="rc au"><div class="rc-stars">★★★★★</div><div class="rc-txt">"Все продумано до дрібниць. Персонал привітний, розташування — краще не придумаєш."</div><div><div class="rc-au">Олексій Т. — Київ</div><div class="rc-src">Opera · Google</div></div></div>
+      <div class="rc au"><div class="rc-stars">★★★★☆</div><div class="rc-txt">"Дуже гарне співвідношення ціни та якості. Домашня атмосфера, чисто, тихо."</div><div><div class="rc-au">Anna W. — Kraków</div><div class="rc-src">Garden · TripAdvisor</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec ct-sec" id="contact">
+  <div class="cont">
+    <div class="ct-grid">
+      <div>
+        <div class="lbl au">Контакти</div>
+        <h2 class="h2 au">Зв'яжіться<br><em>з нами</em></h2>
+        <div class="ct-items">
+          <div class="au"><div class="ct-lbl">Телефон</div><a href="tel:+380322000000" class="ct-val">+38 032 200 00 00</a><div class="ct-sub">Щодня 08:00 — 22:00</div></div>
+          <div class="au"><div class="ct-lbl">Email</div><a href="mailto:info@potupa-hotel.com" class="ct-val">info@potupa-hotel.com</a></div>
+          <div class="au">
+            <div class="ct-lbl">Адреси готелів</div>
+            <div class="hlist">
+              <a href="#hotels" class="hli"><div class="hli-n">01</div><div class="hli-i"><div class="hli-nm">Potupa Heritage</div><div class="hli-ad">вул. Зустрічна, 1 · 28 номерів</div></div><span class="hli-ar">→</span></a>
+              <a href="#hotels" class="hli"><div class="hli-n">02</div><div class="hli-i"><div class="hli-nm">Potupa Opera</div><div class="hli-ad">вул. Шпитальна, 21 · 18 номерів</div></div><span class="hli-ar">→</span></a>
+              <a href="#hotels" class="hli"><div class="hli-n">03</div><div class="hli-i"><div class="hli-nm">Potupa Garden</div><div class="hli-ad">вул. Зелена, 44а · 31 номер</div></div><span class="hli-ar">→</span></a>
+              <a href="#hotels" class="hli"><div class="hli-n">04</div><div class="hli-i"><div class="hli-nm">Potupa Central</div><div class="hli-ad">вул. Ярослава Мудрого, 33 · 15 номерів</div></div><span class="hli-ar">→</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="au">
+        <div class="map-wrap">
+          <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=23.96,49.83,24.02,49.855&layer=mapnik" allowfullscreen loading="lazy" title="Львів"></iframe>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="#bstrip" class="btn btn-acc" style="flex:1;justify-content:center;">Забронювати номер</a>
+          <a href="https://potupa-hotel.com" target="_blank" class="btn btn-od" style="flex:1;justify-content:center;">Офіційний сайт</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="ft-logo">POTUPA</div>
+      <div class="ft-sub">Family Hotel Group</div>
+      <p class="ft-desc">Чотири будинки з душею в серці Львова. Автентична архітектура, розумна ціна.</p>
+      <div class="ft-soc"><a class="soc" href="#">IG</a><a class="soc" href="#">FB</a><a class="soc" href="#">TK</a></div>
+    </div>
+    <div class="ft-col">
+      <h4>Готелі</h4>
+      <ul>
+        <li><a href="#hotels">Heritage · Зустрічна, 1</a></li>
+        <li><a href="#hotels">Opera · Шпитальна, 21</a></li>
+        <li><a href="#hotels">Garden · Зелена, 44а</a></li>
+        <li><a href="#hotels">Central · Мудрого, 33</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Компанія</h4>
+      <ul>
+        <li><a href="#about">Про нас</a></li>
+        <li><a href="#reviews">Відгуки</a></li>
+        <li><a href="#contact">Контакти</a></li>
+        <li><a href="https://potupa-hotel.com">Офіційний сайт</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2026 Potupa Family Hotel Group</span>
+    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#">Конфіденційність</a><a href="#">Умови бронювання</a></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // Navbar scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 20), {passive:true});
+
+  // Burger
+  const brg = document.getElementById('brg');
+  const mm  = document.getElementById('mmenu');
+  brg.addEventListener('click', () => {
+    brg.classList.toggle('open');
+    mm.classList.toggle('open');
+    document.body.style.overflow = mm.classList.contains('open') ? 'hidden' : '';
+  });
+  function cm() {
+    brg.classList.remove('open');
+    mm.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Hero entrance
+  const tl = gsap.timeline({delay:.25});
+  tl
+    .from('.hero-bg img', {scale:1.07, duration:2.2, ease:'power2.out'})
+    .from('#he',  {opacity:0, y:14, duration:.5}, '-=1.5')
+    .to('#ht1',   {y:'0%', duration:.6, ease:'power3.out'}, '-=1.2')
+    .to('#ht2',   {y:'0%', duration:.6, ease:'power3.out'}, '-=.48')
+    .to('#ht3',   {y:'0%', duration:.6, ease:'power3.out'}, '-=.48')
+    .from('#hs',  {opacity:0, y:14, duration:.45}, '-=.3')
+    .from('#hb',  {opacity:0, y:10, duration:.4},  '-=.2')
+    .from('#hsc', {opacity:0, duration:.4}, '-=.1');
+
+  // Hero parallax
+  gsap.to('.hero-bg img', {
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.2 },
+    y: 90, ease: 'none'
+  });
+
+  // Scroll reveals via IntersectionObserver (works well on mobile)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const grid = e.target.closest('.hotels-grid,.rv-grid,.feat-grid,.stats-in');
+      let delay = 0;
+      if (grid) {
+        const kids = [...grid.querySelectorAll('.au,.af,.al')];
+        delay = kids.indexOf(e.target) * 0.09;
+      }
+      setTimeout(() => e.target.classList.add('done'), delay * 1000);
+      io.unobserve(e.target);
+    });
+  }, {threshold: 0.1, rootMargin: '0px 0px -36px 0px'});
+  document.querySelectorAll('.au,.af,.al').forEach(el => io.observe(el));
+
+  // About image parallax
+  if (window.matchMedia('(min-width:768px)').matches) {
+    gsap.to('.ab-img img', {
+      scrollTrigger: { trigger: '.about-sec', start: 'top bottom', end: 'bottom top', scrub: 1.4 },
+      y: -48, ease: 'none'
+    });
+  }
+</script>
+</body>
+</html>
