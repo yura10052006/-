@@ -1,0 +1,21 @@
+{
+  "name": "weightlifting-tracker",
+  "version": "1.0.0",
+  "description": "Telegram Mini App — трекер тренувань для важкоатлетів / Weightlifting training tracker",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "setup-bot": "node bot/setup.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "license": "MIT"
+}

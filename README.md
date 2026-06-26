@@ -1,21 +1,105 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 🏋️ Трекер важкоатлета / Weightlifting Tracker
 
-# Run and deploy your AI Studio app
+Telegram Mini App — трекер тренувань для важкоатлетів з готовою програмою,
+журналом тренувань, обліком прогресу, особистими рекордами та калькулятором 1ПМ.
 
-This contains everything you need to run your app locally.
+Telegram Mini App — a training tracker for weightlifters with a built-in program,
+workout log, progress tracking, personal records and a 1RM calculator.
 
-View your app in AI Studio: https://ai.studio/apps/100698bf-68b7-42c8-8d6b-362b06393352
+---
 
-## Run Locally
+## ✨ Можливості / Features
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+- 📒 **Журнал тренувань** — записуйте вправи: вага, повтори, підходи, дата, нотатки.
+- 📋 **Готова програма** — 4-тижневий цикл (ривок, поштовх, присіди, тяги).
+  Робочі ваги автоматично рахуються від ваших рекордів (1ПМ).
+- 📈 **Прогрес** — загальний тоннаж, кількість тренувань, графіки по вправах.
+- 🏅 **Рекорди** — особисті максимуми (1ПМ) по кожній вправі.
+- 🧮 **Калькулятор** — розрахунок 1ПМ і робочих ваг у відсотках (формула Еплі).
+- 🌍 **Дві мови** — українська та англійська (перемикач у верхньому правому куті).
 
+---
 
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
+## 🚀 Як запустити / How to run
+
+### 1. Встановіть залежності / Install dependencies
+```bash
+npm install
+```
+
+### 2. Налаштуйте `.env` / Configure `.env`
+```bash
+cp .env.example .env
+```
+Для першого тесту нічого змінювати не треба — `DEV_MODE=1` дозволяє
+відкривати додаток у звичайному браузері.
+
+For a first test you don't need to change anything — `DEV_MODE=1`
+lets you open the app in a regular browser.
+
+### 3. Запустіть сервер / Start the server
+```bash
+npm start
+```
+Відкрийте в браузері / Open in a browser: **http://localhost:3000**
+
+> У режимі розробки використовується тестовий користувач, тож ви одразу
+> побачите інтерфейс і зможете все спробувати.
+
+---
+
+## 📱 Підключення до Telegram / Connecting to Telegram
+
+Коли захочете запустити саме як Telegram Mini App:
+
+1. Створіть бота у [@BotFather](https://t.me/BotFather) → отримаєте **токен**.
+2. Впишіть токен у `.env`:
+   ```
+   BOT_TOKEN=ваш_токен_тут
+   DEV_MODE=0
+   ```
+3. Викладіть додаток у публічний HTTPS (наприклад, через
+   [ngrok](https://ngrok.com), Railway, Render тощо) і впишіть адресу:
+   ```
+   WEBAPP_URL=https://ваша-адреса
+   ```
+4. Налаштуйте кнопку меню бота:
+   ```bash
+   npm run setup-bot
+   ```
+5. Відкрийте свого бота в Telegram і натисніть кнопку **🏋️ Трекер**.
+
+> ⚠️ Telegram Mini App вимагає **HTTPS**. Локальний `http://localhost`
+> підходить лише для тесту у браузері (DEV_MODE).
+
+---
+
+## 🗂 Структура проєкту / Project structure
+
+```
+.
+├── server/
+│   ├── index.js      # Express-сервер + API
+│   ├── db.js         # База даних SQLite + схема
+│   ├── auth.js       # Перевірка підпису Telegram
+│   └── program.js    # Каталог вправ і готова програма
+├── public/           # Фронтенд (Mini App)
+│   ├── index.html
+│   ├── app.js
+│   ├── styles.css
+│   └── i18n.js       # Переклади (uk / en)
+├── bot/
+│   └── setup.js      # Налаштування кнопки меню бота
+├── data/             # Тут створюється файл бази даних (tracker.db)
+├── .env.example
+└── package.json
+```
+
+## 🛠 Технології / Tech stack
+
+- **Node.js + Express** — сервер та API
+- **SQLite (better-sqlite3)** — база даних (один файл, без окремого сервера БД)
+- **Vanilla JS + Telegram WebApp SDK** — фронтенд
+
+## 📜 Ліцензія / License
+MIT
