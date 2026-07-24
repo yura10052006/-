@@ -1,0 +1,4 @@
+<resources>
+    <!-- Базова тема; Compose керує кольорами через Material 3 у коді. -->
+    <style name="Theme.VoiceAssistant" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
