@@ -1,21 +1,34 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Голосовий AI-асистент (Claude) — Трек A
 
-# Run and deploy your AI Studio app
+Прототип для перевірки гіпотези: **чи зручно давати задачі голосом** — перш ніж купувати
+окуляри Ray-Ban Meta. Пайплайн: голос → STT → Claude (з tool use) → TTS → голос у вухо.
+Українська мова, звичайні Bluetooth-навушники (окуляри пізніше підключаться так само).
 
-This contains everything you need to run your app locally.
+Повний контекст і рішення — у документах SDD:
+- **[`spec.md`](spec.md)** — що і навіщо (гіпотеза, межі, критерії).
+- **[`plan.md`](plan.md)** — як (архітектура, контракт, стек).
+- **[`tasks.md`](tasks.md)** — конкретні задачі з критеріями готовності.
 
-View your app in AI Studio: https://ai.studio/apps/100698bf-68b7-42c8-8d6b-362b06393352
+## Архітектура (стисло)
 
-## Run Locally
+```
+Android (тонкий клієнт)  ──WAV 8кГц──►  Python-бекенд (FastAPI)  ──►  Whisper · Claude · Todoist
+   кнопка · мікрофон · TTS   ◄──JSON──      STT → tool use → задача
+```
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+- **`backend/`** — Python (FastAPI). Уся логіка: STT (Whisper) → Claude (tool use) → Todoist.
+- **`android/`** — тонкий нативний клієнт (Kotlin): push-to-talk, запис з Bluetooth-мікрофона (HFP), озвучування (системний TTS). З'явиться на віхі M4.
+- **`legacy/`** — старий непов'язаний каркас, збережений навмисно (див. `legacy/README.md`).
 
+## Швидкий старт (бекенд)
 
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env          # впиши свої ключі: Anthropic, OpenAI, Todoist
+uvicorn app.main:app --reload
+```
+
+Перевірка: `curl http://localhost:8000/health` → `{"status":"ok"}`.
+Деталі — у `backend/README.md`. Android — відкрити теку `android/` в Android Studio.
